@@ -9,9 +9,11 @@
   "author": "Maksym Bohun",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.1",
     "mongoose": "^5.13.20",
     "nodemon": "^3.0.1",
     "slugify": "^1.6.6"
