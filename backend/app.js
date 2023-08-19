@@ -7,6 +7,7 @@ const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 var bodyParser = require("body-parser");
+const AppError = require("./utils/appError");
 
 var jsonParser = bodyParser.json();
 
