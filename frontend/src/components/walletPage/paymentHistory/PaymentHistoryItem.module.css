@@ -1,0 +1,36 @@
+.container:nth-child(1) {
+  border-top: none;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+  border-top: 1px solid #000;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.container p {
+  justify-self: start;
+  padding-left: 1.6rem;
+}
+
+.btn {
+  display: flex;
+  border: 1px solid #000;
+  height: 2.4rem;
+  width: 2.4rem;
+  align-self: center;
+  justify-self: center;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+
+.btn div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -75%);
+  font-size: 1.8rem;
+}

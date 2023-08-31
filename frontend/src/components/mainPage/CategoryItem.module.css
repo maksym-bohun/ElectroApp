@@ -1,0 +1,40 @@
+.item {
+  text-align: center;
+  flex-basis: 13%; /* Ширина элемента в зависимости от количества колонок (100% / 6 колонок) */
+  box-sizing: border-box;
+  margin-bottom: 3rem;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.link:link,
+.link:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+.link:active,
+.link:hover {
+  transform: scale(102%);
+}
+
+.icon {
+  background-color: #fff;
+  height: 5rem;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.name {
+  color: #fff;
+}

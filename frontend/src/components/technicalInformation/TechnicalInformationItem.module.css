@@ -1,0 +1,10 @@
+.title {
+  font-weight: 500;
+  margin-left: 1rem;
+  margin-bottom: 0;
+}
+
+.list {
+  list-style: none;
+  margin-left: -1rem;
+}

@@ -1,0 +1,130 @@
+form {
+  width: 100%;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 12fr 5fr;
+  margin: 1.8rem 1rem 1rem 0;
+}
+
+.heading {
+  grid-column: 1/-1;
+  justify-self: center;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 2rem;
+  width: 23rem;
+}
+
+.right-bar {
+  margin: 0 auto;
+}
+
+.name-input,
+.category-select,
+.subcategory-select,
+.price-input {
+  padding: 0.5rem 0 0.5rem 0.7rem;
+  font-size: 1.2rem;
+  border-radius: 0.3rem;
+}
+
+.price-input {
+  width: 6rem;
+}
+
+.name-input,
+.category-select,
+.subcategory-select {
+  width: 100%;
+  border: 1px solid #000;
+}
+
+.name-input {
+  width: 96%;
+}
+
+.price-box {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.price-box div {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.price-box div input {
+  height: 1.4rem;
+}
+
+.price-box div input[type="checkbox"] {
+  width: 1.4rem;
+}
+
+.wrapper {
+  display: flex;
+  /* gap: 3rem; */
+  justify-content: space-between;
+  margin: 0 7rem;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  margin: 0 7rem;
+}
+
+.description label {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+.description textarea {
+  width: calc(100% - 0.8rem);
+  height: 12rem;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  padding: 0.4rem;
+  resize: none;
+}
+
+.publish-btn {
+  width: 10rem;
+  margin: 1rem 7rem 2rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: #000;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.error {
+  color: red;
+  margin-bottom: 3rem;
+  border: 2px solid red;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.3rem;
+}
+
+.published {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  align-items: center;
+}

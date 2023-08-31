@@ -1,0 +1,43 @@
+.container {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  margin: 5rem auto;
+  gap: 1rem;
+}
+
+.label {
+  border: 1px solid #1d2023;
+  padding: 0.6rem 1rem 0.6rem 0.2rem;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  cursor: text;
+  width: 80%;
+}
+
+.input {
+  border: none;
+  outline: none;
+  margin-left: 0.3rem;
+}
+
+.input,
+.input::placeholder {
+  font-size: 1.2rem;
+}
+
+.container button {
+  padding: 0.8rem 1.6rem;
+  font-size: 1.2rem;
+  background-color: #343639 !important;
+  color: #fff !important;
+  border: none !important;
+  border: 1px solid #fff !important;
+}
+
+.container button:hover {
+  background-color: #fff !important;
+  color: #343639 !important;
+  border: 1px solid #343639 !important;
+}
