@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please enter your name!"],
     minlength: 1,
   },
-
+  products: [{ type: mongoose.Schema.ObjectId, ref: "Product" }],
   phoneNumber: {
     type: Number,
     required: [true, "Please enter your phone number!"],
@@ -20,9 +20,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please enter your email!"],
     unique: true,
   },
-  photo: {
-    type: String,
-  },
+  photo: { type: String },
   password: {
     type: String,
     required: [true, "Please enter password!"],
@@ -31,19 +29,20 @@ const userSchema = new mongoose.Schema({
   },
   passwordConfirm: {
     type: String,
-    required: [true, "Please confirm your password!"],
-    minlength: 8,
-    select: false,
-    validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: "Passwords are not the same!",
-    },
+    // required: [true, "Please confirm your password!"],
+    // minlength: 8,
+    // select: false,
+    // validate: {
+    //   validator: function (el) {
+    //     return el === this.password;
+    //   },
+    //   message: "Passwords are not the same!",
+    // },
   },
   passwordChangedAt: { type: Date, default: Date.now() },
   passwordResetToken: { type: String },
   passwordResetExpires: { type: Date },
+  likedProducts: { type: [mongoose.ObjectId], ref: "Product" },
 });
 
 userSchema.pre("save", async function (next) {

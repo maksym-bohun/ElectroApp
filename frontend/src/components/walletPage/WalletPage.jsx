@@ -64,6 +64,10 @@ const WalletPage = () => {
                     phoneNumber={user.phoneNumber}
                     id={product.id}
                     type="wallet"
+                    stats={{
+                      views: product.views,
+                      phoneNumberViews: product.phoneNumberViews,
+                    }}
                   />
                 );
               })}

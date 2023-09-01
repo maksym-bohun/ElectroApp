@@ -39,7 +39,7 @@ const CreateAdvertismentForm = ({
       currentCategory.current.value.trim().length > 0 &&
       currentCategory.current.value.length !== "Category" &&
       name.current.value.trim().length > 0 &&
-      price.current.value.trim().length > 0&&
+      price.current.value.trim().length > 0 &&
       cityIsValid &&
       images.length > 0
     ) {

@@ -5,9 +5,11 @@ import AdvertismentDescription from "./AdvertismentDescription";
 import AdvertismentPageSellersInfo from "./AdvertismentPageSellersInfo";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import FsLightbox from "fslightbox-react";
 
 const AdvertismentPage = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [toggler, setToggler] = useState(false);
   const location = useLocation();
   const params = useParams();
   console.log("PARAMS", params);
@@ -27,7 +29,7 @@ const AdvertismentPage = () => {
     }
 
     // console.log(params);
-    // console.log("currentProduct", currentProduct);
+    console.log("currentProduct", currentProduct);
 
     return (
       <>
@@ -35,15 +37,21 @@ const AdvertismentPage = () => {
         <div className={classes["advertisment-page"]}>
           <div className={classes.container}>
             <div>
-              <div className={classes["image-container"]}>
-                <img
-                  src={
-                    currentProduct.image ||
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png"
-                  }
-                  className={classes.image}
-                />
-              </div>
+              <>
+                <div
+                  className={classes["image-container"]}
+                  onClick={() => setToggler(!toggler)}
+                >
+                  <img
+                    src={
+                      currentProduct.images[0] ||
+                      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png"
+                    }
+                    className={classes.image}
+                  />
+                </div>
+                <FsLightbox toggler={toggler} sources={currentProduct.images} />
+              </>
               <AdvertismentDescription {...currentProduct} />
             </div>
             <AdvertismentPageSellersInfo seller={currentProduct.author} />

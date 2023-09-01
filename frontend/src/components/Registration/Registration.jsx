@@ -26,11 +26,11 @@ const Registration = () => {
       passwordConfirm: password.current.value,
       phoneNumber: phoneNumber.current.value,
       email: email.current.value,
-      photo: image,
+      photo: image[0].url,
     });
 
     try {
-      console.log(registrationBody);
+      console.log();
       const res = await fetch("http://127.0.0.1:8000/api/v1/users/signup", {
         method: "POST",
         body: registrationBody,
@@ -97,11 +97,7 @@ const Registration = () => {
             </div>
           </div>
 
-          {/* <DragAndDropImage
-            className={classes["image-container"]}
-            setImagesToForm={setImages}
-          /> */}
-          <DnDImage
+          <DragAndDropImage
             className={classes["image-container"]}
             setImagesToForm={setImage}
           />

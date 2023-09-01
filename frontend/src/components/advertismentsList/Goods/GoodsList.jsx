@@ -96,6 +96,7 @@ const GoodsList = ({ filters, city }) => {
                     includesFilters.length > 0 &&
                     includesFilters.every((filter) => filter === true)
                   ) {
+                    console.log("ITEM", item);
                     return (
                       <NavLink
                         to={item.id}

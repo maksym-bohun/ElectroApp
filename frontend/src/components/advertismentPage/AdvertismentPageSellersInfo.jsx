@@ -1,18 +1,31 @@
 import classes from "./AdvertismentPage.module.css";
 import Button from "../UI/Button";
 import { BiChat, BiPhone } from "react-icons/bi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const AdvertismentPageSellersInfo = ({ seller }) => {
   const [showNumber, setShowNumber] = useState(false);
   console.log(seller);
+  const params = useParams();
+
+  const phoneNumberHandler = () => {
+    setShowNumber(true);
+  };
+
+  useEffect(() => {
+    if (showNumber)
+      fetch(
+        `http://127.0.0.1:8000/api/v1/products/addPhoneNumberView/${params.advertismentId}`
+      );
+  }, [showNumber]);
 
   return (
     <div className={classes.info}>
       <div className={classes["sellers-info"]}>
         <img
           className={classes["user-image"]}
-          src={seller.image || require("../../images/user.png")}
+          src={seller.photo || require("../../images/user.png")}
         />
         <div className={classes["name-container"]}>
           <p>{seller.name}</p>
@@ -27,7 +40,7 @@ const AdvertismentPageSellersInfo = ({ seller }) => {
             ? `${classes["info-btn"]} ${classes["number-shown"]}`
             : classes["info-btn"]
         }
-        onClick={() => setShowNumber(true)}
+        onClick={phoneNumberHandler}
       >
         <BiPhone size={24} />
         {showNumber ? `+380${seller.phoneNumber}` : "Phone number"}

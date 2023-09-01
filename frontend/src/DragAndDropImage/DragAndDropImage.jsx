@@ -3,11 +3,14 @@ import classes from "./DragAndDropImage.module.css";
 
 const DragAndDropImage = ({ setImagesToForm, className, type }) => {
   const [images, setImages] = useState([]);
+  const [image, setImage] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    setImagesToForm(images);
+    if (type !== "registration") {
+      setImagesToForm(images);
+    } else setImagesToForm(image);
   }, [images]);
 
   const selectFiles = () => {

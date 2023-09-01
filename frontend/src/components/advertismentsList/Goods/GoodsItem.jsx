@@ -43,15 +43,15 @@ const GoodsItem = ({
           <h3>Статистика: </h3>
           <div>
             <AiOutlineEye size={24} />
-            <span>111</span>
+            <span>{stats.views || 0}</span>
           </div>
           <div>
             <AiOutlineHeart size={24} />
-            <span>111</span>
+            <span>{stats.likes || 0}</span>
           </div>
           <div>
             <AiOutlinePhone size={24} />
-            <span>111</span>
+            <span>{stats.phoneNumberViews || 0}</span>
           </div>
         </div>
       </li>

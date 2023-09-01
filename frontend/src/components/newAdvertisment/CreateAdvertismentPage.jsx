@@ -55,7 +55,7 @@ const CreateAdvertismentPage = (props) => {
     const imagesArray = formData.images.map((img) => img.url);
     console.log(imagesArray);
 
-    const productBody = await JSON.stringify({
+    const productBody = JSON.stringify({
       name: formData.name,
       price: formData.price,
       category,
@@ -64,7 +64,6 @@ const CreateAdvertismentPage = (props) => {
       location: { description: formData.city, coordinates: [0, 0] },
       images: imagesArray,
     });
-    console.log(formData);
 
     console.log("BODY: ", productBody);
 

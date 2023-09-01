@@ -14,17 +14,15 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 );
 
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-};
-
 mongoose
-  .connect(DB, options)
-  .then(() => console.log("connected"))
-  .catch((e) => console.log(e));
+  .connect(DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
+  .then((con) => console.log("DB connection successful!"))
+  .catch((err) => console.log("ERROR"));
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {

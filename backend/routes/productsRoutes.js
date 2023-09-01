@@ -6,9 +6,22 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(authController.protect, productsController.getAllProducts)
-  .post(productsController.createProduct);
+  // authController.protect,
+  .get(productsController.getAllProducts)
+  .post(authController.protect, productsController.createProduct);
 
 router.route("/:id").get(productsController.getProduct).patch();
+
+router
+  .route("/addPhoneNumberView/:id")
+  .get(productsController.addPhoneNumberView);
+
+router
+  .route("/likeProduct/:id")
+  .get(authController.protect, productsController.likeProduct);
+
+router
+  .route("/dislikeProduct/:id")
+  .get(authController.protect, productsController.dislikeProduct);
 
 module.exports = router;

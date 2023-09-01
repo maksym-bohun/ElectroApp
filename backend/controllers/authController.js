@@ -20,10 +20,12 @@ const createSendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
   };
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
-  res.cookie("jwt", token, cookieOptions);
   user.password = undefined;
-  res.status(statusCode).json({ status: "success", token, data: { user } });
+  res.status(statusCode).json({
+    status: "success",
+
+    data: { user, token, tokenExpires: cookieOptions.expires },
+  });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -34,39 +36,36 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt || undefined,
     phoneNumber: req.body.phoneNumber,
+    photo: req.body.photo,
   });
 
   createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, phoneNumber, password } = req.body;
+  const { login, password } = req.body;
   let currentUser = undefined;
-  if (!password && (!phoneNumber || !email))
+
+  if (!password || !login)
     return next(
       new AppError(
         "Please provide your phone number or email and password!",
         400
       )
     );
-  if (email === undefined && phoneNumber !== undefined) {
-    currentUser = await User.findOne({ phoneNumber }).select("+password");
+
+  if (typeof login === "number") {
+    currentUser = await User.findOne({ phoneNumber: login }).select(
+      "+password"
+    );
     if (
       !currentUser ||
       !(await currentUser.correctPassword(password, currentUser.password))
     ) {
       return next(new AppError("Incorrect phone number or password!", 400));
     }
-  } else if (phoneNumber === undefined && email !== undefined) {
-    currentUser = await User.findOne({ email }).select("+password");
-    if (
-      !currentUser ||
-      !(await currentUser.correctPassword(password, currentUser.password))
-    ) {
-      return next(new AppError("Incorrect email or password!", 400));
-    }
-  } else {
-    currentUser = await User.findOne({ email }).select("+password");
+  } else if (typeof login === "string") {
+    currentUser = await User.findOne({ email: login }).select("+password");
     if (
       !currentUser ||
       !(await currentUser.correctPassword(password, currentUser.password))
