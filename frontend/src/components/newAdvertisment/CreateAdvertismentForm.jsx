@@ -29,12 +29,7 @@ const CreateAdvertismentForm = ({
 
   const changeFormHandler = () => {
     setFormIsFilled(false);
-    console.log(
-      currentCategory.current.value.trim().length > 0 &&
-        currentCategory.current.value.length !== "Category" &&
-        name.current.value.trim().length > 0 &&
-        price.current.value.trim().length > 0
-    );
+
     if (
       currentCategory.current.value.trim().length > 0 &&
       currentCategory.current.value.length !== "Category" &&
@@ -44,15 +39,16 @@ const CreateAdvertismentForm = ({
       images.length > 0
     ) {
       setFormIsFilled(true);
-      returnData({
-        category: currentCategory.current.value,
-        name: name.current.value,
-        price: price.current.value,
-        city: cityName,
-        description: description.current.value,
-        images: images,
-      });
     }
+
+    returnData({
+      category: currentCategory.current.value,
+      name: name.current.value,
+      price: price.current.value,
+      city: cityName,
+      description: description.current.value,
+      images: images,
+    });
   };
 
   useEffect(() => {

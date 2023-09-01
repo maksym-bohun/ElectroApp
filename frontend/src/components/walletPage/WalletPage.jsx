@@ -67,6 +67,7 @@ const WalletPage = () => {
                     stats={{
                       views: product.views,
                       phoneNumberViews: product.phoneNumberViews,
+                      likes: product.likes,
                     }}
                   />
                 );

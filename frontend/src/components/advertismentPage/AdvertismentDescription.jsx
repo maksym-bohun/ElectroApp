@@ -81,6 +81,7 @@ const AdvertismentDescription = ({ name, price, adress, description, id }) => {
           {price} <FaHryvnia />
         </h4>
         <h5 className={classes.location}>{adress}</h5>
+        <h3 className={classes["description-header"]}>Опис</h3>
         <div className={classes.description}>{description}</div>
       </div>
     </div>

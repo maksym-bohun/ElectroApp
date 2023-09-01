@@ -82,7 +82,7 @@ const GoodsList = ({ filters, city }) => {
           )}
           {!listIsEmpty && (
             <>
-              {productsArray.map((item) => {
+              {productsArray.reverse().map((item) => {
                 includesFilters = [];
                 if (productFilters.length === 0) includesFilters.push(true);
                 productFilters.map((filter) => {

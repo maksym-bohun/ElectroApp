@@ -2,7 +2,7 @@ import classes from "./AdvertismentPage.module.css";
 import Button from "../UI/Button";
 import { BiChat, BiPhone } from "react-icons/bi";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const AdvertismentPageSellersInfo = ({ seller }) => {
   const [showNumber, setShowNumber] = useState(false);
@@ -46,7 +46,7 @@ const AdvertismentPageSellersInfo = ({ seller }) => {
         {showNumber ? `+380${seller.phoneNumber}` : "Phone number"}
       </Button>
       <Button className={classes["info-btn"]}>Order with verification</Button>
-      <a href="#">Seller's advertisments</a>
+      <Link to={`/users/${seller._id}`}> Seller's advertisments</Link>
     </div>
   );
 };

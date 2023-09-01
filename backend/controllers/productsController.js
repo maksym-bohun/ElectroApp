@@ -7,13 +7,17 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  const newProduct = await Product.create(req.body);
-  newProduct.author = req.user._id;
-  newProduct.save();
-  await User.findByIdAndUpdate(req.user.id, {
-    $push: { products: newProduct._id },
-  });
-  res.status(201).json({ status: "success", data: { product: newProduct } });
+  try {
+    const newProduct = await Product.create(req.body);
+    newProduct.author = req.user._id;
+    newProduct.save();
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: { products: newProduct._id },
+    });
+    res.status(201).json({ status: "success", data: { product: newProduct } });
+  } catch (err) {
+    res.status(400).json({ status: "fail", message: err });
+  }
 };
 
 exports.getProduct = async (req, res) => {

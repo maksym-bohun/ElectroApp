@@ -18,15 +18,18 @@ const CreateAdvertismentPage = (props) => {
   const [advPublished, setAdvPublished] = useState(false);
   const navigate = useNavigate();
 
-  const products = useSelector((state) => state.ProductsReducer.products);
   const isLoggedIn = useSelector(
     (state) => state.userIsLoggedReducer.userIsLogged
   );
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setAdvPublished(false);
   }, []);
+
+  useEffect(() => {
+    console.log("FORM", formData);
+    console.log("TECHNICAL", technicalInfoData);
+  }, [technicalInfoData, formData]);
 
   const getTechnicalInformation = (technicalInfo, isFull) => {
     console.log(technicalInfo, isFull);
@@ -34,19 +37,20 @@ const CreateAdvertismentPage = (props) => {
     setTechnicalInfoData(technicalInfo);
   };
 
-  const onChangeCategory = (category) => {
-    setCategory(category);
-  };
+  // const onChangeCategory = (category) => {
+  //   setCategory(category);
+  // };
 
   const getDataHandler = (data) => {
     setFormData(data);
-    console.log(data);
+    console.log("FORM DATA", data);
   };
 
   const publishHandler = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
     console.log("FORM DATA", formData);
+
+    const token = localStorage.getItem("token");
     const categoryRes = await fetch(
       `http://127.0.0.1:8000/api/v1/categories/${formData.category.toLowerCase()}`
     );
@@ -64,8 +68,6 @@ const CreateAdvertismentPage = (props) => {
       location: { description: formData.city, coordinates: [0, 0] },
       images: imagesArray,
     });
-
-    console.log("BODY: ", productBody);
 
     const res = await fetch("http://127.0.0.1:8000/api/v1/products", {
       method: "POST",
@@ -102,7 +104,7 @@ const CreateAdvertismentPage = (props) => {
                 </div>
               )}
               <CreateAdvertismentForm
-                onChangeCategory={onChangeCategory}
+                onChangeCategory={setCategory}
                 setFormIsFull={setFormIsFull}
                 returnData={getDataHandler}
               />

@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: [5, "Name is too short!"],
-      maxlength: [40, "Name is too long!"],
+      maxlength: [100, "Name is too long!"],
     },
     slug: String,
     images: { type: [String] },
@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema(
     description: {
       type: String,
       minlength: 10,
-      maxlength: 100,
+      maxlength: 1000,
     },
     technicalInfo: {
       type: Object,
@@ -35,9 +35,9 @@ const productSchema = new mongoose.Schema(
       description: { type: String, required: true },
     },
     author: { type: mongoose.Schema.ObjectId, ref: "User" },
-    views: { type: Number, default: 0 },
-    likes: { type: Number, default: 0 },
-    phoneNumberViews: { type: Number, default: 0 },
+    views: { type: Number, default: 0, min: 0 },
+    likes: { type: Number, default: 0, min: 0 },
+    phoneNumberViews: { type: Number, default: 0, min: 0 },
   },
   {
     toJSON: { virtuals: true },

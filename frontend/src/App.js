@@ -12,6 +12,7 @@ import PersonalOffice from "./components/Signin/Signin";
 import Registration from "./components/Registration/Registration";
 import SignIn from "./components/Signin/Signin";
 import DnDImage from "./DragAndDropImage/DnDImage";
+import UsersAdverts from "./components/UsersAdverts/UsersAdverts";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
   { path: "/allAdvertisments", element: <AllAdvertismentsPage /> },
   { path: "/registration", element: <Registration /> },
   { path: "/signin", element: <SignIn /> },
+  { path: "/users/:id", element: <UsersAdverts /> },
 ]);
 
 function App() {
