@@ -64,3 +64,16 @@
   flex-direction: column;
   gap: 1.6rem;
 }
+
+.signin {
+  position: relative;
+}
+
+.signin::before {
+  content: "You are not logged in! Please log in!";
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-weight: 500;
+}
