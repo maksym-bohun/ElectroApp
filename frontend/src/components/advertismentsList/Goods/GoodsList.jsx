@@ -1,8 +1,10 @@
 import GoodsItem from "./GoodsItem";
-import { NavLink, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import classes from "./../AdvertismentsListPage.module.css";
 import Spinner from "../../UI/Spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { addProducts } from "../../../store/ProductsReducer";
 
 const GoodsList = ({ filters, city }) => {
   const params = useParams();
@@ -12,6 +14,10 @@ const GoodsList = ({ filters, city }) => {
   const [productsArray, setProductsArray] = useState([]);
   const [loading, setLoading] = useState(true);
   let includesFilters;
+  const productsState = useSelector((state) => {
+    return state.productsReducer.products;
+  });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (city) {
@@ -22,20 +28,51 @@ const GoodsList = ({ filters, city }) => {
       }
     }
 
-    fetch(
-      `http://127.0.0.1:8000/api/v1/categories/${params.category.toLowerCase()}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setProductsArray(data.data.products);
-        setLoading(false);
-        if (data.data.products.length === 0) setListIsEmpty(true);
-      });
+    console.log(productsState);
+
+    if (
+      Array.isArray(productsState) &&
+      productsState.filter(
+        (product) =>
+          product.category.name.toLowerCase() === params.category.toLowerCase()
+      ).length === 0
+    ) {
+      setLoading(true);
+
+      fetch(
+        `http://127.0.0.1:8000/api/v1/categories/${params.category.toLowerCase()}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          const reversedArray = [];
+          data.data.products.forEach((prod) => reversedArray.unshift(prod));
+          setProductsArray(reversedArray);
+          setLoading(false);
+          if (data.data.products.length === 0) {
+            setListIsEmpty(true);
+          }
+          setListIsEmpty(false);
+          dispatch(addProducts(data.data.products));
+        });
+    } else {
+      const reversedArray = [];
+      productsState
+        .filter((prod) => prod.category.name === params.category)
+        .forEach((prod) => reversedArray.unshift(prod));
+      setProductsArray(reversedArray);
+      setListIsEmpty(false);
+      if (reversedArray.length === 0) {
+        setListIsEmpty(true);
+      }
+      setLoading(false);
+    }
   }, [city]);
 
-  useEffect(() => {
-    console.log(productsArray);
-  }, [productsArray]);
+  // useEffect(() => {
+  //   setProductsArray(products);
+  //   setLoading(false);
+  //   if (products.length === 0) setListIsEmpty(true);
+  // }, [products]);
 
   useEffect(() => {
     if (filters) {
@@ -82,7 +119,7 @@ const GoodsList = ({ filters, city }) => {
           )}
           {!listIsEmpty && (
             <>
-              {productsArray.reverse().map((item) => {
+              {productsArray.map((item) => {
                 includesFilters = [];
                 if (productFilters.length === 0) includesFilters.push(true);
                 productFilters.map((filter) => {
@@ -98,10 +135,11 @@ const GoodsList = ({ filters, city }) => {
                   ) {
                     console.log("ITEM", item);
                     return (
-                      <NavLink
+                      <Link
                         to={item.id}
                         style={{ textDecoration: "none", color: "#000" }}
                         key={item.id}
+                        state={item}
                       >
                         <GoodsItem
                           name={item.name}
@@ -112,7 +150,7 @@ const GoodsList = ({ filters, city }) => {
                           phoneNumber={item.author.phoneNumber}
                           id={item.id}
                         />
-                      </NavLink>
+                      </Link>
                     );
                   }
                 } else {
@@ -122,10 +160,11 @@ const GoodsList = ({ filters, city }) => {
                     cityFilter === item.adress
                   ) {
                     return (
-                      <NavLink
+                      <Link
                         to={item.id}
                         style={{ textDecoration: "none", color: "#000" }}
                         key={item.id}
+                        state={item}
                       >
                         <GoodsItem
                           name={item.name}
@@ -136,7 +175,7 @@ const GoodsList = ({ filters, city }) => {
                           phoneNumber={item.author.phoneNumber}
                           id={item.id}
                         />
-                      </NavLink>
+                      </Link>
                     );
                   }
                 }

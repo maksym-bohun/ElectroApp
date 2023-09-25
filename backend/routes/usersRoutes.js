@@ -14,6 +14,7 @@ router
   .get(authController.protect, usersController.getMe, usersController.getUser);
 
 router.route("/:id").get(usersController.getUser);
+router.route("/").get(usersController.getAllUsers);
 
 router
   .route("/updateMyPassword")

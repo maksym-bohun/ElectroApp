@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addAdvertisment } from "../../store/ProductsReducer";
 import { BsPatchCheck } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../UI/Spinner";
+import { DUMMY_CATEGORIES } from "../../data/data";
+import axios from "axios";
 
 const CreateAdvertismentPage = (props) => {
   const [category, setCategory] = useState([]);
@@ -16,20 +19,33 @@ const CreateAdvertismentPage = (props) => {
   const [formIsFull, setFormIsFull] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [advPublished, setAdvPublished] = useState(false);
+  const [file, setFile] = useState();
+
   const navigate = useNavigate();
+  let categories = useSelector(
+    (state) => state.categoriesReducer.categories.payload
+  );
+
+  if (categories === undefined) {
+    categories = DUMMY_CATEGORIES;
+  }
 
   const isLoggedIn = useSelector(
     (state) => state.userIsLoggedReducer.userIsLogged
   );
 
+  const upload = () => {
+    const formData = new FormData();
+    formData.append("file", file);
+    axios
+      .post("http://localhost:8000/api/v1/products", formData)
+      .then((res) => {})
+      .catch((er) => console.log(er));
+  };
+
   useEffect(() => {
     setAdvPublished(false);
   }, []);
-
-  useEffect(() => {
-    console.log("FORM", formData);
-    console.log("TECHNICAL", technicalInfoData);
-  }, [technicalInfoData, formData]);
 
   const getTechnicalInformation = (technicalInfo, isFull) => {
     console.log(technicalInfo, isFull);
@@ -37,27 +53,19 @@ const CreateAdvertismentPage = (props) => {
     setTechnicalInfoData(technicalInfo);
   };
 
-  // const onChangeCategory = (category) => {
-  //   setCategory(category);
-  // };
-
   const getDataHandler = (data) => {
     setFormData(data);
-    console.log("FORM DATA", data);
   };
 
   const publishHandler = async (e) => {
     e.preventDefault();
-    console.log("FORM DATA", formData);
 
     const token = localStorage.getItem("token");
-    const categoryRes = await fetch(
-      `http://127.0.0.1:8000/api/v1/categories/${formData.category.toLowerCase()}`
-    );
-    const categoryData = await categoryRes.json();
-    const category = categoryData.data.id;
+    const category = categories.filter(
+      (item) => item.name.toLowerCase() === formData.category.toLowerCase()
+    )[0].id;
+
     const imagesArray = formData.images.map((img) => img.url);
-    console.log(imagesArray);
 
     const productBody = JSON.stringify({
       name: formData.name,
@@ -69,23 +77,31 @@ const CreateAdvertismentPage = (props) => {
       images: imagesArray,
     });
 
-    const res = await fetch("http://127.0.0.1:8000/api/v1/products", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: productBody,
-    });
-    const data = await res.json();
-    console.log(data);
-    if (data.status === "success") {
-      setAdvPublished(true);
+    console.log("start fetching");
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/v1/products", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: productBody,
+      });
+
+      upload();
+
+      const data = await res.json();
+      if (data.status === "success") {
+        setAdvPublished(true);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (localStorage.getItem("token") === "") {
       navigate("/signin");
     }
   }, []);
@@ -123,10 +139,14 @@ const CreateAdvertismentPage = (props) => {
           </form>
         </>
       )}
+
       {advPublished && (
         <div className={classes.published}>
           <BsPatchCheck size={80} />
           <div className={classes.heading}>Оголошення опубліковано!</div>
+          <div className={classes.heading}>
+            Воно з'явиться протягом 15-ти хвилин!
+          </div>
         </div>
       )}
     </>

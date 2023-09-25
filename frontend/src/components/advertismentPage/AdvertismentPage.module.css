@@ -93,6 +93,12 @@
   margin-top: 1rem;
 }
 
+.spinner {
+  position: absolute;
+  top: 50% !important;
+  left: 50% !important;
+}
+
 @media screen and (min-width: 2100px) {
   .image-container {
     width: 60rem;

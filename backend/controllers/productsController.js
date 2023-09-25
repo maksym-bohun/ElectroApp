@@ -1,14 +1,48 @@
 const Product = require("../models/productModel");
 const User = require("../models/userModel");
+const multer = require("multer");
+const upload = require("../utils/productsStorage");
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.find().populate("category", "name");
+  const products = await Product.find()
+    .populate("category", "name")
+    .populate({
+      path: "author",
+      select: "name phoneNumber email photo products",
+      populate: {
+        path: "products",
+        select: "images name _id price location technicalInfo description",
+      },
+    });
   res.status(200).json({ status: "success", data: products });
 };
 
 exports.createProduct = async (req, res) => {
+  // try {
+  //   const title = "TITLE";
+  //   const price = 111;
+  //   const images = req.files;
+  //   images.forEach((img) => console.log(Date.now() + img.originalname));
+
+  //   // const product = Product.create({
+  //   //   name: title,
+  //   //   price,
+  //   //   images,
+  //   // });
+
+  //   res.status(201).json({ message: "Продукт успешно добавлен" });
+  // } catch (err) {
+  //   // console.error(err);
+  //   res.status(500).json({ error: "Ошибка при сохранении продукта" });
+  // }
+
   try {
+    console.log(req.body);
+    // const images = req.files.map((file) => file.filename);
+    const images = [""];
+
     const newProduct = await Product.create(req.body);
+    console.log("newProduct ", newProduct);
     newProduct.author = req.user._id;
     newProduct.save();
     await User.findByIdAndUpdate(req.user.id, {
@@ -16,25 +50,38 @@ exports.createProduct = async (req, res) => {
     });
     res.status(201).json({ status: "success", data: { product: newProduct } });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ status: "fail", message: err });
   }
 };
 
 exports.getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate({
-      path: "author",
-      select: "name phoneNumber email photo",
-    });
-
-    product.views += 1;
-
-    await product.save();
-
-    res.status(200).json({ status: "success", data: product });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    const products = await Product.find({}, "-__v");
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Ошибка при получении продуктов" });
   }
+
+  // try {
+  //   const product = await Product.findById(req.params.id).populate({
+  //     path: "author",
+  //     select: "name phoneNumber email photo products",
+  //     populate: {
+  //       path: "products",
+  //       select: "images name _id price location technicalInfo",
+  //     },
+  //   });
+
+  //   product.views += 1;
+
+  //   await product.save();
+
+  //   res.status(200).json({ status: "success", data: product });
+  // } catch (error) {
+  //   res.status(500).json({ status: "error", message: error.message });
+  // }
 };
 
 exports.addPhoneNumberView = async (req, res) => {

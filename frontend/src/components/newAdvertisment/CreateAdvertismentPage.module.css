@@ -128,3 +128,16 @@ form {
   gap: 1.8rem;
   align-items: center;
 }
+
+.spinner {
+  top: 60% !important;
+  left: 50% !important;
+}
+
+.spinner-text {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 500;
+}

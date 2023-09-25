@@ -13,9 +13,11 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
+categorySchema.index({ name: "text" });
+
 categorySchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
-  console.log("\n\nSLUGIFY\n\n", this.slug);
+  // console.log("\n\nSLUGIFY\n\n", this.slug);
   next();
 });
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import classes from "./DragAndDropImage.module.css";
 
-const DragAndDropImage = ({ setImagesToForm, className, type }) => {
+const DragAndDropImage = ({ setImagesToForm, className, type, name }) => {
   const [images, setImages] = useState([]);
   const [image, setImage] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -96,7 +96,7 @@ const DragAndDropImage = ({ setImagesToForm, className, type }) => {
         )}
 
         <input
-          name="file"
+          name={name}
           type="file"
           accept="image/*"
           className={classes.file}

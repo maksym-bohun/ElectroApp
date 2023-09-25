@@ -15,6 +15,7 @@ const AllAdvertismentsPage = () => {
   const [productsLoaded, setProductsLoaded] = useState(false);
   // console.log(state);
   let location = useLocation();
+  const productsState = useSelector((state) => state.productsReducer.products);
   let initialProducts;
   const inputValue = location.state.inputValue;
 
@@ -24,25 +25,9 @@ const AllAdvertismentsPage = () => {
   };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/v1/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        const allProductsData = data.data.reduce((accumulator, category) => {
-          return accumulator.concat(category.products);
-        }, []);
-        setProducts(
-          allProductsData.filter((product) =>
-            product.name.toLowerCase().includes(inputValue.toLowerCase())
-          )
-        );
-        setDefaultProducts(
-          allProductsData.filter((product) =>
-            product.name.toLowerCase().includes(inputValue.toLowerCase())
-          )
-        );
-        setProductsLoaded(true);
-      });
-  }, []);
+    setProducts(productsState);
+    setProductsLoaded(false);
+  }, [productsState]);
 
   const getFiltersHandler = (filters) => {
     if (filters.length !== 0) {

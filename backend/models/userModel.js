@@ -68,6 +68,9 @@ userSchema.methods.changedPasswordAfter = function (JWTTimeStamp) {
   }
   return false;
 };
+userSchema.index({ email: 1 });
+userSchema.index({ phoneNumber: 1 });
+userSchema.index({ products: 1 });
 
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");

@@ -104,7 +104,7 @@ const CreateAdvertismentForm = ({
         </div>
 
         <div>
-          <DragAndDropImage setImagesToForm={setImages} />
+          <DragAndDropImage setImagesToForm={setImages} name="file" />
         </div>
         {/* <div>
           <DnDImage setImagesToForm={setImages}/>

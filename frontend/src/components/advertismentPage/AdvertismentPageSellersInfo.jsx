@@ -6,7 +6,6 @@ import { Link, useParams } from "react-router-dom";
 
 const AdvertismentPageSellersInfo = ({ seller }) => {
   const [showNumber, setShowNumber] = useState(false);
-  console.log(seller);
   const params = useParams();
 
   const phoneNumberHandler = () => {
@@ -46,7 +45,10 @@ const AdvertismentPageSellersInfo = ({ seller }) => {
         {showNumber ? `+380${seller.phoneNumber}` : "Phone number"}
       </Button>
       <Button className={classes["info-btn"]}>Order with verification</Button>
-      <Link to={`/users/${seller._id}`}> Seller's advertisments</Link>
+      <Link to={`/users/${seller._id}`} state={seller}>
+        {" "}
+        Seller's advertisments
+      </Link>
     </div>
   );
 };

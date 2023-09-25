@@ -10,9 +10,9 @@ const productSchema = new mongoose.Schema(
       maxlength: [100, "Name is too long!"],
     },
     slug: String,
-    images: { type: [String] },
+    image: [{ type: String }],
     price: {
-      type: Number,
+      type: String,
       required: true,
     },
     category: {
@@ -44,6 +44,10 @@ const productSchema = new mongoose.Schema(
     toObjects: { virtuals: true },
   }
 );
+
+productSchema.index({ author: 1 });
+productSchema.index({ name: "text" });
+productSchema.index({ category: "text" });
 
 productSchema.statics.addProduct = async function (categoryId) {
   const stats = await this.aggregate([

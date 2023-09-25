@@ -21,11 +21,15 @@ exports.getAllCategories = async (req, res) => {
 exports.getCategory = async (req, res) => {
   const category = await Category.findOne({ slug: req.params.slug }).populate({
     path: "products",
-    select: "name price author category location images technicalInfo",
+    select:
+      "name price author category location images technicalInfo desciption",
     populate: [
       {
         path: "author",
-        select: "name email phoneNumber",
+        select: "name email phoneNumber photo products",
+        populate: {
+          path: "products",
+        },
       },
       {
         path: "category",
