@@ -37,12 +37,19 @@ exports.createProduct = async (req, res) => {
   // }
 
   try {
-    console.log(req.body);
-    // const images = req.files.map((file) => file.filename);
-    const images = [""];
+    // console.log(req.body);
+    // console.log(req.files);
+    const images = req.files.map((file) => file.filename);
+    const { technicalInfo } = req.body;
 
-    const newProduct = await Product.create(req.body);
-    console.log("newProduct ", newProduct);
+    const techInfo = JSON.parse(technicalInfo);
+
+    const newProduct = await Product.create({
+      ...req.body,
+      technicalInfo: techInfo,
+      images,
+    });
+
     newProduct.author = req.user._id;
     newProduct.save();
     await User.findByIdAndUpdate(req.user.id, {

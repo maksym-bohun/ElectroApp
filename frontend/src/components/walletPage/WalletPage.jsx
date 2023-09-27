@@ -66,6 +66,8 @@ const WalletPage = () => {
     );
   }
 
+  console.log(products);
+
   return (
     <>
       <Navigation />

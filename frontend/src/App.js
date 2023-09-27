@@ -19,6 +19,7 @@ import { setUser } from "./store/currentUserReducer";
 import { setProducts } from "./store/ProductsReducer";
 import { setCategories } from "./store/СategoriesReducer";
 import { setUsers } from "./store/UsersReducer";
+import Test from "./Test";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },

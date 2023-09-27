@@ -3,14 +3,14 @@ const Category = require("./categoryModel");
 
 const productSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
       minlength: [5, "Name is too short!"],
-      maxlength: [100, "Name is too long!"],
+      maxlength: [200, "Name is too long!"],
     },
     slug: String,
-    image: [{ type: String }],
+    images: [{ type: String }],
     price: {
       type: String,
       required: true,
@@ -18,12 +18,12 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.ObjectId,
       ref: "Category",
-      required: true,
+      // required: true,
     },
     description: {
       type: String,
       minlength: 10,
-      maxlength: 1000,
+      maxlength: 3000,
     },
     technicalInfo: {
       type: Object,
@@ -31,8 +31,8 @@ const productSchema = new mongoose.Schema(
     location: {
       type: { type: String, default: "Point", enum: ["Point"] },
       //   required: true,
-      coordinates: { type: [Number], required: true },
-      description: { type: String, required: true },
+      coordinates: { type: [Number] },
+      description: { type: String },
     },
     author: { type: mongoose.Schema.ObjectId, ref: "User" },
     views: { type: Number, default: 0, min: 0 },

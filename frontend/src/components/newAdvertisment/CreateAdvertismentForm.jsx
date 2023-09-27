@@ -9,6 +9,7 @@ const CreateAdvertismentForm = ({
   onChangeCategory,
   setFormIsFull,
   returnData,
+  setImagesToForm,
 }) => {
   const [images, setImages] = useState([]);
   const [formIsFilled, setFormIsFilled] = useState(false);
@@ -104,7 +105,7 @@ const CreateAdvertismentForm = ({
         </div>
 
         <div>
-          <DragAndDropImage setImagesToForm={setImages} name="file" />
+          <DragAndDropImage setImagesToForm={setImagesToForm} name="file" />
         </div>
         {/* <div>
           <DnDImage setImagesToForm={setImages}/>

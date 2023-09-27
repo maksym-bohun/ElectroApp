@@ -1,16 +1,14 @@
 const multer = require("multer");
 
-console.log(__dirname);
-
 const productsStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    return cb(null, __dirname + "/../images/products");
+    return cb(null, `${__dirname}/../images/products`);
   },
   filename: function (req, file, cb) {
     return cb(null, `${Date.now()}--${file.originalname}`);
   },
 });
 
-const productsImagesUpload = multer({ productsStorage });
+const productsImagesUpload = multer({ storage: productsStorage });
 
 module.exports = productsImagesUpload;

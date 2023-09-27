@@ -3,45 +3,29 @@ import TechnicalInformation from "../technicalInformation/TechnicalInformation";
 import classes from "./CreateAdvertismentPage.module.css";
 import CreateAdvertismentForm from "./CreateAdvertismentForm";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addAdvertisment } from "../../store/ProductsReducer";
 import { BsPatchCheck } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Spinner from "../UI/Spinner";
-import { DUMMY_CATEGORIES } from "../../data/data";
-import axios from "axios";
 
 const CreateAdvertismentPage = (props) => {
   const [category, setCategory] = useState([]);
-  const [formData, setFormData] = useState({});
+  const [dataFromForm, setDataFromForm] = useState({});
   const [technicalInfoData, setTechnicalInfoData] = useState({});
   const [technicalInfoFull, setTechnicalInfoFull] = useState(false);
   const [formIsFull, setFormIsFull] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [advPublished, setAdvPublished] = useState(false);
-  const [file, setFile] = useState();
+  const [images, setImages] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const navigate = useNavigate();
-  let categories = useSelector(
-    (state) => state.categoriesReducer.categories.payload
-  );
 
-  if (categories === undefined) {
-    categories = DUMMY_CATEGORIES;
-  }
-
-  const isLoggedIn = useSelector(
-    (state) => state.userIsLoggedReducer.userIsLogged
-  );
-
-  const upload = () => {
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post("http://localhost:8000/api/v1/products", formData)
-      .then((res) => {})
-      .catch((er) => console.log(er));
-  };
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/v1/categories")
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data.data);
+      });
+  }, []);
 
   useEffect(() => {
     setAdvPublished(false);
@@ -54,49 +38,60 @@ const CreateAdvertismentPage = (props) => {
   };
 
   const getDataHandler = (data) => {
-    setFormData(data);
+    setDataFromForm(data);
+  };
+
+  const setImagesToForm = (images) => {
+    const newFiles = [];
+
+    for (let i = 0; i < images.length; i++) {
+      newFiles.push(images[i]);
+    }
+
+    console.log(newFiles);
+
+    setImages([...newFiles]);
   };
 
   const publishHandler = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
     const category = categories.filter(
-      (item) => item.name.toLowerCase() === formData.category.toLowerCase()
+      (item) => item.name.toLowerCase() === dataFromForm.category.toLowerCase()
     )[0].id;
 
-    const imagesArray = formData.images.map((img) => img.url);
+    const formData = new FormData();
+    formData.append("title", dataFromForm.name);
+    formData.append("city", dataFromForm.city);
+    formData.append("category", category);
+    formData.append("description", dataFromForm.description);
+    formData.append("price", dataFromForm.price);
+    formData.append("technicalInfo", JSON.stringify(technicalInfoData));
 
-    const productBody = JSON.stringify({
-      name: formData.name,
-      price: formData.price,
-      category,
-      description: formData.description,
-      technicalInfo: technicalInfoData,
-      location: { description: formData.city, coordinates: [0, 0] },
-      images: imagesArray,
-    });
+    for (let i = 0; i < images.length; i++) {
+      formData.append("photos", images[i]);
+    }
 
-    console.log("start fetching");
+    console.log("technicalInfoData", JSON.stringify(technicalInfoData));
+
+    const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/v1/products", {
+      const response = await fetch("http://127.0.0.1:8000/api/v1/products", {
         method: "POST",
+        body: formData,
         headers: {
-          "Content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: productBody,
       });
 
-      upload();
-
-      const data = await res.json();
-      if (data.status === "success") {
-        setAdvPublished(true);
+      if (response.ok) {
+        console.log("Data loaded successful");
+      } else {
+        console.error("An error occured");
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error("Error: ", error);
     }
   };
 
@@ -123,8 +118,8 @@ const CreateAdvertismentPage = (props) => {
                 onChangeCategory={setCategory}
                 setFormIsFull={setFormIsFull}
                 returnData={getDataHandler}
+                setImagesToForm={setImagesToForm}
               />
-
               <div className={classes["right-bar"]}>
                 <TechnicalInformation
                   filters={category.technicalInfo}

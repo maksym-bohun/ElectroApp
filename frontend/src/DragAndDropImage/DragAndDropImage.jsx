@@ -7,14 +7,23 @@ const DragAndDropImage = ({ setImagesToForm, className, type, name }) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
+  // Создайте объект File из Blob, указав имя файла (например, "my-image.jpg").
+  // const file = new File([blob], "my-image.jpg", { type: "image/jpeg" });
+
   useEffect(() => {
     if (type !== "registration") {
-      setImagesToForm(images);
+      setImagesToForm(
+        images.map((image) => {
+          const blob = new Blob([image], { type: "image/jpeg" });
+          return new File([blob], image.name, { type: "image/jpeg" });
+        })
+      );
     } else setImagesToForm(image);
   }, [images]);
 
   const selectFiles = () => {
     fileInputRef.current.click();
+    console.log(fileInputRef.current.name);
   };
 
   const onFileSelect = (e) => {
