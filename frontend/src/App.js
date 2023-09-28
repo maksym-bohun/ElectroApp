@@ -70,9 +70,7 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("START");
     // fetchData();
-
     // const intervalId = setInterval(fetchData, 100000);
     // return () => clearInterval(intervalId);
   }, []);
@@ -81,39 +79,3 @@ function App() {
 }
 
 export default App;
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-
-// function App() {
-//   const [files, setFiles] = useState([]);
-//   const upload = () => {
-//     const formData = new FormData();
-//     const filesArray = Array.from(files);
-//     console.log("files", files);
-//     filesArray.forEach((file) => {
-//       formData.append("file", file);
-//     });
-//     axios
-//       .post("http://localhost:8000/api/v1/products", formData)
-//       .then((res) => {})
-//       .catch((er) => console.log(er));
-//   };
-//   return (
-//     <div>
-//       <input
-//         type="file"
-//         multiple
-//         onChange={(e) => {
-//           console.log(e.target.files);
-//           setFiles(e.target.files);
-//         }}
-//       />
-//       <button type="button" onClick={upload}>
-//         Upload
-//       </button>
-//     </div>
-//   );
-// }
-
-// export default App;

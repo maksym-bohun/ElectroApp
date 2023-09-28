@@ -9,7 +9,6 @@ const productsReducer = createSlice({
     },
     addProducts: (state, action) => {
       if (state !== null) {
-        console.log("p_p", action.payload);
         const products = action.payload;
         products.forEach((el) => {
           let productIsInState = false;

@@ -19,8 +19,8 @@ const AdvertismentPage = () => {
   let seller = null;
 
   useEffect(() => {
-    console.log("LOCATION IN ADVPAGE", location.state);
     if (products === null) {
+      console.log("START LOADING");
       setIsLoading(true);
       fetch(`http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`)
         .then((res) => res.json())
@@ -41,7 +41,6 @@ const AdvertismentPage = () => {
   }, [products]);
 
   useEffect(() => {
-    console.log(currentProduct);
     if (currentProduct) {
       currentProduct.images.forEach((img) => {
         setImages((prevImage) => [

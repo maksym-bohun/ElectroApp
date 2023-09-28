@@ -3,7 +3,7 @@ import { FaHryvnia, FaEye } from "react-icons/fa";
 import { AiOutlineHeart, AiOutlinePhone, AiOutlineEye } from "react-icons/ai";
 
 const GoodsItem = ({
-  image = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png",
+  image,
   name,
   technicalInfo,
   price,
@@ -13,9 +13,15 @@ const GoodsItem = ({
   stats,
   id,
 }) => {
-  const img = require(`../../../../../backend/images/products/${image}`);
-  console.log(image);
-  console.log(img);
+  let img;
+  if (image) {
+    img = require(`../../../../../backend/images/products/${image}`);
+  } else {
+    img =
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png";
+  }
+  console.log("ADRESS", adress);
+  console.log("IMAGE", image);
 
   if (type === "wallet") {
     return (

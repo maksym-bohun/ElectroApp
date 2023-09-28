@@ -19,17 +19,18 @@ exports.getAllProducts = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   console.log(req.body);
-  console.log(req.files);
 
   try {
     const images = req.files.map((file) => file.filename);
     const { technicalInfo } = req.body;
+    // console.log(req.body.city);
 
     const techInfo = JSON.parse(technicalInfo);
 
     const newProduct = await Product.create({
       ...req.body,
       technicalInfo: techInfo,
+      location: { type: "Point", coordinates: [], description: req.body.city },
       images,
     });
 
@@ -51,6 +52,7 @@ exports.createProduct = async (req, res) => {
 exports.getProduct = async (req, res) => {
   try {
     const products = await Product.find({}, "-__v");
+    console.log("GET PRODUCT", products);
     res.json(products);
   } catch (err) {
     console.error(err);

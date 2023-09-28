@@ -44,6 +44,7 @@ const AdvertismentsList = ({ category }) => {
   };
 
   useEffect(() => {
+    console.log("CHANGED CITY");
     setGoodsList(
       <GoodsList filters={filters} city={city} setLoading={setLoadingHandler} />
     );

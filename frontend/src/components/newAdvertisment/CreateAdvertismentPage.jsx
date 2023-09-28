@@ -40,6 +40,7 @@ const CreateAdvertismentPage = (props) => {
 
   const getDataHandler = (data) => {
     setDataFromForm(data);
+    console.log("CITY", data.city);
   };
 
   const setImagesToForm = (images) => {
@@ -91,6 +92,7 @@ const CreateAdvertismentPage = (props) => {
 
       if (response.ok) {
         console.log("Data loaded successful");
+        setAdvPublished(true);
       } else {
         console.error("An error occured");
       }
