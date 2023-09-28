@@ -17,6 +17,8 @@ router
 
 router.route("/:id").get(productsController.getProduct).patch();
 
+router.route("/viewAdvertisment/:id").get(productsController.viewAdvertisment);
+
 router
   .route("/addPhoneNumberView/:id")
   .get(productsController.addPhoneNumberView);

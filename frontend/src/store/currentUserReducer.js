@@ -10,8 +10,24 @@ const currentUserReducer = createSlice({
       console.log("PAYLOAD", action.payload);
       state.user = action.payload;
     },
+    likeProduct: (state, action) => {
+      console.log("LIKE");
+      console.log(state.user);
+      if (state.user.likedProducts) {
+        state.user.likedProducts.push(action.payload);
+      }
+    },
+    dislikeProduct: (state, action) => {
+      console.log("DISLIKE");
+      console.log(state.user.likedProducts);
+      if (state.user) {
+        const indexInArray = state.user.likedProducts.indexOf(action.payload);
+        state.user.likedProducts.splice(indexInArray, 1);
+      }
+    },
   },
 });
 
-export const { setUser } = currentUserReducer.actions;
+export const { setUser, likeProduct, dislikeProduct } =
+  currentUserReducer.actions;
 export default currentUserReducer.reducer;

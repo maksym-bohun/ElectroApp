@@ -20,8 +20,6 @@ const GoodsItem = ({
     img =
       "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png";
   }
-  console.log("ADRESS", adress);
-  console.log("IMAGE", image);
 
   if (type === "wallet") {
     return (

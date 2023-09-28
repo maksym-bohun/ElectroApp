@@ -88,6 +88,15 @@ exports.addPhoneNumberView = async (req, res) => {
   res.status(200).json({ status: "success", data: product });
 };
 
+exports.viewAdvertisment = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  product.views += 1;
+  product.save();
+
+  res.status(200).json({ status: "success", data: product });
+};
+
 exports.likeProduct = async (req, res) => {
   const product = await Product.findById(req.params.id);
   const user = await User.findById(req.user._id);

@@ -20,10 +20,6 @@ const GoodsList = ({ filters, city }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("productsArray", productsArray);
-  }, []);
-
-  useEffect(() => {
     if (city) {
       if (city.props.children !== "Вся Україна") {
         setCityFilter(city.props.children);
@@ -31,8 +27,6 @@ const GoodsList = ({ filters, city }) => {
         setCityFilter("");
       }
     }
-
-    console.log("productsState", productsState);
 
     if (
       Array.isArray(productsState) &&
@@ -49,7 +43,6 @@ const GoodsList = ({ filters, city }) => {
         .then((res) => res.json())
         .then((data) => {
           const reversedArray = [];
-          console.log("data data prods", data.data.products);
           data.data.products.forEach((prod) => reversedArray.unshift(prod));
           setProductsArray(reversedArray);
           setLoading(false);
@@ -65,7 +58,6 @@ const GoodsList = ({ filters, city }) => {
         .filter((prod) => prod.category.name === params.category)
         .forEach((prod) => reversedArray.unshift(prod));
       setProductsArray(reversedArray);
-      console.log("reversedArray", reversedArray);
       setListIsEmpty(false);
       if (reversedArray.length === 0) {
         setListIsEmpty(true);
@@ -133,10 +125,6 @@ const GoodsList = ({ filters, city }) => {
                     includesFilters.length > 0 &&
                     includesFilters.every((filter) => filter === true)
                   ) {
-                    console.log(
-                      "ITEM ❗️❗️❗️❗️❗️❗️",
-                      item.location.description
-                    );
                     return (
                       <Link
                         to={item.id}
@@ -160,7 +148,6 @@ const GoodsList = ({ filters, city }) => {
                   if (
                     includesFilters.length > 0 &&
                     includesFilters.every((filter) => {
-                      console.log(cityFilter);
                       return filter === true;
                     }) &&
                     cityFilter !== undefined &&

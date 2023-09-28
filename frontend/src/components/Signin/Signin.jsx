@@ -46,6 +46,7 @@ const SignIn = ({ className }) => {
         })
         .then((data) => {
           dispatch(setUser(data.data.user));
+          console.log("DATA DATA USEEEER", data.data.user);
           setRequestIsLoading(false);
           navigate("/wallet");
         });

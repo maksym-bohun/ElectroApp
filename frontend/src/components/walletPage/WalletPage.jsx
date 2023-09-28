@@ -17,40 +17,46 @@ const WalletPage = () => {
   const [user, setUser] = useState({});
   const [products, setProducts] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [userIsLogged, setUserIsLogged] = useState(false);
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUserReducer.user);
-  const userIsLogged = useSelector(
-    (state) => state.userIsLoggedReducer.userIsLogged
-  );
 
   const editProfileHandler = () => {};
 
-  useEffect(() => console.log(isLoading), [isLoading]);
-
   useEffect(() => {
-    if (Object.values(currentUser).length !== 0) {
-      setUser(currentUser);
-      setProducts(currentUser.products);
-      setIsLoading(false);
+    if (localStorage.getItem("token") !== "") {
+      if (Object.values(currentUser).length !== 0) {
+        console.log(1);
+        setUser(currentUser);
+        setProducts(currentUser.products);
+        setIsLoading(false);
+      } else {
+        console.log(2);
+        setIsLoading(true);
+        const token = localStorage.getItem("token");
+        // const id = jwt_decode(token).id;
+        fetch("http://127.0.0.1:8000/api/v1/users/me", {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success") {
+              setIsLoading(false);
+              setUser(data.data.user);
+              setProducts(data.data.user.products);
+              setUserIsLogged(true);
+            } else {
+              setIsLoading(false);
+              setUserIsLogged(false);
+              navigate("/signin");
+            }
+          });
+      }
     } else {
-      setIsLoading(true);
-      console.log("else");
-      const token = localStorage.getItem("token");
-      const id = jwt_decode(token).id;
-      fetch("http://127.0.0.1:8000/api/v1/users/me", {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("FINISH");
-          setIsLoading(false);
-          console.log(data);
-          setUser(data.data.user);
-          setProducts(data.data.user.products);
-        });
+      navigate("/signin");
     }
   }, [currentUser]);
 
@@ -58,14 +64,6 @@ const WalletPage = () => {
     localStorage.setItem("token", "");
     navigate("/signin");
   };
-
-  if (localStorage.getItem("token") === "") {
-    return (
-      <>
-        <SignIn className={classes.signin} />
-      </>
-    );
-  }
 
   console.log(products);
 

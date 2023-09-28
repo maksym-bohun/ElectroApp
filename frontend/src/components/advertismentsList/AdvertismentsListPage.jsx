@@ -44,7 +44,6 @@ const AdvertismentsList = ({ category }) => {
   };
 
   useEffect(() => {
-    console.log("CHANGED CITY");
     setGoodsList(
       <GoodsList filters={filters} city={city} setLoading={setLoadingHandler} />
     );
@@ -59,7 +58,7 @@ const AdvertismentsList = ({ category }) => {
           <div className={classes.location}>
             {city}
             <Button className={classes.btn} onClick={changeCityHandler}>
-              Change filter
+              Change city
             </Button>
           </div>
           <TechnicalInformation filters={techInfo} getFilters={getFilters} />

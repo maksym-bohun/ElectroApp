@@ -19,6 +19,17 @@ const AdvertismentPage = () => {
   let seller = null;
 
   useEffect(() => {
+    fetch(
+      `http://127.0.0.1:8000/api/v1/products/viewAdvertisment/${params.advertismentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+  });
+
+  useEffect(() => {
     if (products === null) {
       console.log("START LOADING");
       setIsLoading(true);
@@ -51,8 +62,6 @@ const AdvertismentPage = () => {
     }
   }, [currentProduct]);
 
-  // const img = require(`../../../../backend/images/products/${currentProduct.images[0]}`);
-
   if (currentProduct) {
     if (params.category === "allAdvertisments") {
       const id =
@@ -84,7 +93,11 @@ const AdvertismentPage = () => {
                   </div>
                   <FsLightbox toggler={toggler} sources={images} />
                 </>
-                <AdvertismentDescription {...currentProduct} />
+                <AdvertismentDescription
+                  {...currentProduct}
+                  isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                />
               </div>
               <AdvertismentPageSellersInfo
                 seller={seller || currentProduct.author}
