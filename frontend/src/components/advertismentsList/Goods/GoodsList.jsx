@@ -28,8 +28,6 @@ const GoodsList = ({ filters, city }) => {
       }
     }
 
-    console.log(productsState);
-
     if (
       Array.isArray(productsState) &&
       productsState.filter(

@@ -21,7 +21,6 @@ const UsersAdverts = () => {
   //       setUser(data.data.user);
   //     });
   // }, []);
-  console.log("USER", user);
 
   if (Object.keys(user).length !== 0) {
     return (
@@ -30,7 +29,10 @@ const UsersAdverts = () => {
         <main className={classes.main}>
           <div className={classes["info-container"]}>
             <img
-              src={user.photo || defaultPhoto}
+              src={
+                require(`../../../../backend/images/users/${user.photo}`) ||
+                defaultPhoto
+              }
               className={classes["user-img"]}
               alt="Seller photo"
             />

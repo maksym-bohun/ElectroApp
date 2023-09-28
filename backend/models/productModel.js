@@ -3,7 +3,7 @@ const Category = require("./categoryModel");
 
 const productSchema = new mongoose.Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
       minlength: [5, "Name is too short!"],

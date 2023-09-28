@@ -1,16 +1,14 @@
 const multer = require("multer");
 
-console.log(__dirname);
-
 const userPhotoStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    return cb(null, __dirname + "/../images/products");
+    return cb(null, `${__dirname}/../images/users`);
   },
   filename: function (req, file, cb) {
-    return cb(null, `${Date.now()}--${file.originalname}`);
+    return cb(null, `${Date.now()}--${file.originalname.split(" ").join("-")}`);
   },
 });
 
-const userPhotoUpload = multer({ userPhotoStorage });
+const userPhotoUpload = multer({ storage: userPhotoStorage });
 
 module.exports = userPhotoUpload;

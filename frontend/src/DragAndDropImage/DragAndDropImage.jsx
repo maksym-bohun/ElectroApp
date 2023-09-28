@@ -1,29 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import classes from "./DragAndDropImage.module.css";
 
-const DragAndDropImage = ({ setImagesToForm, className, type, name }) => {
+const DragAndDropImage = ({ setImagesToForm, className, type = "", name }) => {
   const [images, setImages] = useState([]);
-  const [image, setImage] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Создайте объект File из Blob, указав имя файла (например, "my-image.jpg").
-  // const file = new File([blob], "my-image.jpg", { type: "image/jpeg" });
-
   useEffect(() => {
     if (type !== "registration") {
-      setImagesToForm(
-        images.map((image) => {
-          const blob = new Blob([image], { type: "image/jpeg" });
-          return new File([blob], image.name, { type: "image/jpeg" });
-        })
-      );
-    } else setImagesToForm(image);
+      setImagesToForm(images);
+    } else {
+      setImagesToForm(images[0]);
+    }
   }, [images]);
 
   const selectFiles = () => {
     fileInputRef.current.click();
-    console.log(fileInputRef.current.name);
   };
 
   const onFileSelect = (e) => {
@@ -34,24 +26,18 @@ const DragAndDropImage = ({ setImagesToForm, className, type, name }) => {
 
     for (let i = 0; i < files.length; i++) {
       if (files[i].type.split("/")[0] !== "image") continue;
-
-      const reader = new FileReader();
-      reader.readAsDataURL(files[i]);
-
-      reader.onload = () => {
-        newImages.push({ name: files[i].name, url: reader.result });
-
-        if (newImages.length === files.length) {
-          setImages((prevImages) => [...prevImages, ...newImages]);
-        }
-      };
-
-      reader.onerror = (err) => console.log("Error ", err);
+      newImages.push(files[i]);
     }
+
+    setImages((prevImages) => [...prevImages, ...newImages]);
   };
 
   const deleteImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImages((prevImages) => {
+      const updatedImages = [...prevImages];
+      updatedImages.splice(index, 1);
+      return updatedImages;
+    });
   };
 
   const onDragOver = (e) => {
@@ -74,20 +60,10 @@ const DragAndDropImage = ({ setImagesToForm, className, type, name }) => {
 
     for (let i = 0; i < files.length; i++) {
       if (files[i].type.split("/")[0] !== "image") continue;
-
-      const reader = new FileReader();
-      reader.readAsDataURL(files[i]);
-
-      reader.onload = () => {
-        newImages.push({ name: files[i].name, url: reader.result });
-
-        if (newImages.length === files.length) {
-          setImages((prevImages) => [...prevImages, ...newImages]);
-        }
-      };
-
-      reader.onerror = (err) => console.log("Error ", err);
+      newImages.push(files[i]);
     }
+
+    setImages((prevImages) => [...prevImages, ...newImages]);
   };
 
   return (
@@ -104,15 +80,28 @@ const DragAndDropImage = ({ setImagesToForm, className, type, name }) => {
           <>Drag & Drop images here or &darr;</>
         )}
 
-        <input
-          name={name}
-          type="file"
-          accept="image/*"
-          className={classes.file}
-          multiple
-          ref={fileInputRef}
-          onChange={onFileSelect}
-        />
+        {type !== "registration" && (
+          <input
+            name={name}
+            type="file"
+            accept="image/*"
+            className={classes.file}
+            multiple
+            ref={fileInputRef}
+            onChange={onFileSelect}
+          />
+        )}
+
+        {type === "registration" && (
+          <input
+            name={name}
+            type="file"
+            accept="image/*"
+            className={classes.file}
+            ref={fileInputRef}
+            onChange={onFileSelect}
+          />
+        )}
       </div>
 
       <div className={classes.container}>
@@ -123,7 +112,7 @@ const DragAndDropImage = ({ setImagesToForm, className, type, name }) => {
                 <span className="delete" onClick={() => deleteImage(index)}>
                   &times;
                 </span>
-                <img src={image.url} alt={image.name} />
+                <img src={URL.createObjectURL(image)} alt={image.name} />
               </div>
             );
           })}

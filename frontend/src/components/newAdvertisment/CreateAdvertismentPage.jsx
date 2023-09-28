@@ -24,6 +24,7 @@ const CreateAdvertismentPage = (props) => {
       .then((res) => res.json())
       .then((data) => {
         setCategories(data.data);
+        console.log("FINISHED");
       });
   }, []);
 
@@ -42,6 +43,7 @@ const CreateAdvertismentPage = (props) => {
   };
 
   const setImagesToForm = (images) => {
+    console.log(images);
     const newFiles = [];
 
     for (let i = 0; i < images.length; i++) {
@@ -56,12 +58,13 @@ const CreateAdvertismentPage = (props) => {
   const publishHandler = async (e) => {
     e.preventDefault();
 
+    console.log(categories);
     const category = categories.filter(
       (item) => item.name.toLowerCase() === dataFromForm.category.toLowerCase()
     )[0].id;
 
     const formData = new FormData();
-    formData.append("title", dataFromForm.name);
+    formData.append("name", dataFromForm.name);
     formData.append("city", dataFromForm.city);
     formData.append("category", category);
     formData.append("description", dataFromForm.description);
@@ -72,11 +75,10 @@ const CreateAdvertismentPage = (props) => {
       formData.append("photos", images[i]);
     }
 
-    console.log("technicalInfoData", JSON.stringify(technicalInfoData));
-
     const token = localStorage.getItem("token");
 
     try {
+      console.log("Start");
       const response = await fetch("http://127.0.0.1:8000/api/v1/products", {
         method: "POST",
         body: formData,
@@ -84,6 +86,8 @@ const CreateAdvertismentPage = (props) => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      console.log(response);
 
       if (response.ok) {
         console.log("Data loaded successful");

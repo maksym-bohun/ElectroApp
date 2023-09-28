@@ -4,6 +4,7 @@ import classes from "../Signin/Signin.module.css";
 import { useRef, useState } from "react";
 import DragAndDropImage from "../../DragAndDropImage/DragAndDropImage";
 import DnDImage from "../../DragAndDropImage/DnDImage";
+import axios from "axios";
 
 const Registration = () => {
   const [showError, setShowError] = useState(false);
@@ -17,26 +18,29 @@ const Registration = () => {
   const username = useRef();
   const phoneNumber = useRef();
 
+  const setImagesToForm = (image) => {
+    console.log(image);
+    setImage(image);
+  };
+
   const submitRegistrationHandler = async (e) => {
     e.preventDefault();
 
-    const registrationBody = JSON.stringify({
-      name: username.current.value,
-      password: password.current.value,
-      passwordConfirm: password.current.value,
-      phoneNumber: phoneNumber.current.value,
-      email: email.current.value,
-      photo: image[0].url,
-    });
+    const formData = new FormData();
+
+    formData.append("name", username.current.value);
+    formData.append("password", password.current.value);
+    formData.append("passwordConfirm", password.current.value);
+    formData.append("phoneNumber", phoneNumber.current.value);
+    formData.append("email", email.current.value);
+
+    formData.append("photo", image);
 
     try {
-      console.log();
+      console.log("Start");
       const res = await fetch("http://127.0.0.1:8000/api/v1/users/signup", {
         method: "POST",
-        body: registrationBody,
-        headers: {
-          "Content-type": "application/json",
-        },
+        body: formData,
       });
       const data = await res.json();
       console.log(data);
@@ -44,8 +48,8 @@ const Registration = () => {
         localStorage.setItem("token", data.data.token);
         navigate("/wallet");
       }
-    } catch (err) {
-      console.log("ERROR 💥 ", err);
+    } catch (error) {
+      console.error("Error: ", error);
     }
   };
 
@@ -99,7 +103,9 @@ const Registration = () => {
 
           <DragAndDropImage
             className={classes["image-container"]}
-            setImagesToForm={setImage}
+            setImagesToForm={setImagesToForm}
+            type="registration"
+            name="photo"
           />
         </div>
 

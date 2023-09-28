@@ -24,7 +24,10 @@ const AdvertismentPageSellersInfo = ({ seller }) => {
       <div className={classes["sellers-info"]}>
         <img
           className={classes["user-image"]}
-          src={seller.photo || require("../../images/user.png")}
+          src={
+            require(`../../../../backend/images/users/${seller.photo}`) ||
+            require("../../images/user.png")
+          }
         />
         <div className={classes["name-container"]}>
           <p>{seller.name}</p>

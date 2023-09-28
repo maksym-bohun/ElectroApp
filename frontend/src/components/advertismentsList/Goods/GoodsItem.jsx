@@ -13,12 +13,16 @@ const GoodsItem = ({
   stats,
   id,
 }) => {
+  const img = require(`../../../../../backend/images/products/${image}`);
+  console.log(image);
+  console.log(img);
+
   if (type === "wallet") {
     return (
       <li className={classes.item}>
         <div className={classes.container}>
           <div className={classes["image-container"]}>
-            <img src={image} className={classes.image} />
+            <img src={img} className={classes.image} />
           </div>
           <div className={classes.info}>
             <h3>{name}</h3>
@@ -62,7 +66,7 @@ const GoodsItem = ({
     <li className={classes.item}>
       <div className={classes.container}>
         <div className={classes["image-container"]}>
-          <img src={image} className={classes.image} />
+          <img src={img} className={classes.image} />
         </div>
         <div className={classes.info}>
           <h3>{name}</h3>

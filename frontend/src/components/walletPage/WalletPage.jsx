@@ -47,6 +47,7 @@ const WalletPage = () => {
         .then((data) => {
           console.log("FINISH");
           setIsLoading(false);
+          console.log(data);
           setUser(data.data.user);
           setProducts(data.data.user.products);
         });
@@ -77,13 +78,15 @@ const WalletPage = () => {
           <div className={classes["info-wrapper"]}>
             <div>
               <img
-                src={user.photo || defaultUserImage}
+                src={
+                  require(`../../../../backend/images/users/${user.photo}`) ||
+                  defaultUserImage
+                }
                 alt="user-image"
                 className={classes["user-img"]}
               />
               <div className={classes["edit-btn"]} onClick={editProfileHandler}>
-                {" "}
-                <AiOutlineEdit size={20} /> <span>Редагувати профіль</span>{" "}
+                <AiOutlineEdit size={20} /> <span>Редагувати профіль</span>
               </div>
             </div>
             <div>

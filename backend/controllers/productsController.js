@@ -18,27 +18,10 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  // try {
-  //   const title = "TITLE";
-  //   const price = 111;
-  //   const images = req.files;
-  //   images.forEach((img) => console.log(Date.now() + img.originalname));
-
-  //   // const product = Product.create({
-  //   //   name: title,
-  //   //   price,
-  //   //   images,
-  //   // });
-
-  //   res.status(201).json({ message: "Продукт успешно добавлен" });
-  // } catch (err) {
-  //   // console.error(err);
-  //   res.status(500).json({ error: "Ошибка при сохранении продукта" });
-  // }
+  console.log(req.body);
+  console.log(req.files);
 
   try {
-    // console.log(req.body);
-    // console.log(req.files);
     const images = req.files.map((file) => file.filename);
     const { technicalInfo } = req.body;
 
@@ -52,6 +35,9 @@ exports.createProduct = async (req, res) => {
 
     newProduct.author = req.user._id;
     newProduct.save();
+
+    console.log(newProduct);
+    console.log(req.user._id);
     await User.findByIdAndUpdate(req.user.id, {
       $push: { products: newProduct._id },
     });

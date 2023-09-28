@@ -12,6 +12,7 @@ const AdvertismentPage = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [toggler, setToggler] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [images, setImages] = useState([]);
   const location = useLocation();
   const params = useParams();
   const products = useSelector((state) => state.productsReducer.products);
@@ -27,7 +28,6 @@ const AdvertismentPage = () => {
           setCurrentProduct(data.data);
           seller =
             location.state === null ? data.data.author : location.state.author;
-
           setIsLoading(false);
         });
     } else {
@@ -40,6 +40,20 @@ const AdvertismentPage = () => {
     }
   }, [products]);
 
+  useEffect(() => {
+    console.log(currentProduct);
+    if (currentProduct) {
+      currentProduct.images.forEach((img) => {
+        setImages((prevImage) => [
+          ...prevImage,
+          require(`../../../../backend/images/products/${img}`),
+        ]);
+      });
+    }
+  }, [currentProduct]);
+
+  // const img = require(`../../../../backend/images/products/${currentProduct.images[0]}`);
+
   if (currentProduct) {
     if (params.category === "allAdvertisments") {
       const id =
@@ -47,8 +61,6 @@ const AdvertismentPage = () => {
     } else {
       console.log("CURRENT", currentProduct);
     }
-
-    // console.log(params);
 
     return (
       <>
@@ -65,16 +77,13 @@ const AdvertismentPage = () => {
                   >
                     <img
                       src={
-                        currentProduct.images[0] ||
+                        images[0] ||
                         "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png"
                       }
                       className={classes.image}
                     />
                   </div>
-                  <FsLightbox
-                    toggler={toggler}
-                    sources={currentProduct.images}
-                  />
+                  <FsLightbox toggler={toggler} sources={images} />
                 </>
                 <AdvertismentDescription {...currentProduct} />
               </div>
