@@ -26,6 +26,14 @@
   border-radius: 50%;
 }
 
+.user-img--edit {
+  height: 10rem;
+  width: 10rem;
+  object-fit: cover;
+  border: 1px solid #000;
+  border-radius: 50%;
+}
+
 .info-wrapper {
   display: flex;
   gap: 2rem;
@@ -42,7 +50,7 @@
   font-size: 1.2rem;
 }
 
-.info-wrapper .logout-btn {
+.info-wrapper .btn {
   background-color: transparent;
   padding: 0.5rem 1rem;
   border: 1px solid #1d2023;
@@ -50,13 +58,23 @@
   border-radius: 0.4rem;
 }
 
-.info-wrapper .logout-btn:hover {
+.info-wrapper .btn--small {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  margin-top: -0.4rem;
+}
+
+.info-wrapper .btn:hover {
   cursor: pointer;
   background-color: #1d2023;
   color: #fff;
 }
 
 .info-wrapper > a {
+}
+
+.advertisments h2 {
+  text-align: center;
 }
 
 .adverts-container {
@@ -97,4 +115,31 @@
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%);
+}
+
+.emptyAds {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  /* justify-content: center; */
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.emptyAds span {
+  transform: translateY(10%);
+}
+
+.change-phone-number {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.change-phone-number input {
+  font-size: 1.1rem;
+}
+
+.hidden {
+  display: none;
 }

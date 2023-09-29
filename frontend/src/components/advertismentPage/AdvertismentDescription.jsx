@@ -32,53 +32,56 @@ const AdvertismentDescription = ({
 
   useEffect(() => {
     setIsLoading(true);
-    if (Object.values(currentUser).length === 0) {
+    if (
+      Object.values(currentUser).length === 0 &&
+      localStorage.getItem("token") !== ""
+    ) {
       fetch(`http://127.0.0.1:8000/api/v1/users/me`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
         .then((res) => res.json())
         .then((data) => {
-          dispatch(setUser(data.data.user));
-          setIsLoading(false);
-          console.log("setIsLoading(false)");
+          if (data.status === "success") {
+            dispatch(setUser(data.data.user));
+          } else {
+            setIsLoading(false);
+            console.log(currentUser);
+          }
         });
     } else setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    console.log(usersLikedProducts);
-  }, [usersLikedProducts]);
-
   const likeHandler = () => {
     const currentTime = Date.now();
-
-    if (currentTime - lastClickTime >= 3000) {
-      setLastClickTime(currentTime);
-      if (usersLikedProducts.includes(id)) {
-        setPostIsLiked(false);
-        dispatch(dislikeProduct(id));
-        fetch(`http://127.0.0.1:8000/api/v1/products/dislikeProduct/${id}`, {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data));
+    if (Object.values(currentUser).length !== 0) {
+      if (currentTime - lastClickTime >= 3000) {
+        setLastClickTime(currentTime);
+        if (usersLikedProducts.includes(id)) {
+          setPostIsLiked(false);
+          dispatch(dislikeProduct(id));
+          fetch(`http://127.0.0.1:8000/api/v1/products/dislikeProduct/${id}`, {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => console.log(data));
+        } else {
+          setPostIsLiked(true);
+          dispatch(likeProduct(id));
+          fetch(`http://127.0.0.1:8000/api/v1/products/likeProduct/${id}`, {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+            .then((res) => res.json())
+            .then((data) => console.log(data));
+        }
       } else {
-        setPostIsLiked(true);
-        dispatch(likeProduct(id));
-        fetch(`http://127.0.0.1:8000/api/v1/products/likeProduct/${id}`, {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data));
+        console.log("Подождите 5 секунд перед следующим кликом.");
       }
-    } else {
-      console.log("Подождите 5 секунд перед следующим кликом.");
     }
   };
 
@@ -93,9 +96,11 @@ const AdvertismentDescription = ({
       })
         .then((res) => res.json())
         .then((data) => {
-          setPostIsLiked(
-            data.data.user.likedProducts.includes(params.advertismentId)
-          );
+          if (data.status === "success") {
+            setPostIsLiked(
+              data.data.user.likedProducts.includes(params.advertismentId)
+            );
+          }
         });
     }
   }, [postIsLiked]);

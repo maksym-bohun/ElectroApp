@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const fs = require("fs");
 
 exports.getMe = (req, res, next) => {
   // console.log(req.user);
@@ -29,3 +30,27 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
   res.status(200).json({ status: "success", data: { users } });
 });
+
+exports.changeUsersData = async (req, res, next) => {
+  const user = req.user;
+  // console.log(user.id);
+  const currentUser = await User.findById(user.id);
+  // console.log("☘️", currentUser);
+  if (req.file) {
+    fs.unlink(`${__dirname}/../images/users/${user.photo}`, (err) => {
+      if (err) {
+        console.error(`Error deleting file: ${err}`);
+      } else {
+        console.log("File deleted successfully");
+      }
+    });
+
+    currentUser.photo = req.file.filename;
+    console.log(currentUser.photo);
+    console.log("------------------------");
+    console.log(req.file.filename);
+  }
+
+  currentUser.save();
+  res.status(200).json({ status: "success" });
+};

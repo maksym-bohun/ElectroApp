@@ -10,8 +10,9 @@ import jwt_decode from "jwt-decode";
 import defaultUserImage from "./../../images/user.png";
 import GoodsItem from "../advertismentsList/Goods/GoodsItem";
 import SignIn from "../Signin/Signin";
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineFrown } from "react-icons/ai";
 import Spinner from "../UI/Spinner";
+import WalletPageEdit from "./WalletPageEdit";
 
 const WalletPage = () => {
   const [user, setUser] = useState({});
@@ -21,7 +22,11 @@ const WalletPage = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.currentUserReducer.user);
 
-  const editProfileHandler = () => {};
+  const editProfileHandler = () => {
+    console.log("UUSSEERR", user);
+    // navigate("/editProfile", { user: user });
+    navigate("/editProfile", { someData: "This is some data" });
+  };
 
   useEffect(() => {
     if (localStorage.getItem("token") !== "") {
@@ -65,8 +70,6 @@ const WalletPage = () => {
     navigate("/signin");
   };
 
-  console.log(products);
-
   return (
     <>
       <Navigation />
@@ -90,7 +93,7 @@ const WalletPage = () => {
             <div>
               <div>{user.name}</div>
               <div>+380{user.phoneNumber}</div>
-              <button className={classes["logout-btn"]} onClick={logoutHandler}>
+              <button className={classes["btn"]} onClick={logoutHandler}>
                 Вийти
               </button>
             </div>
@@ -98,7 +101,14 @@ const WalletPage = () => {
           <div className={classes.advertisments}>
             <h2>Ваші оголошення</h2>
             <div className={classes["adverts-container"]}>
-              {products &&
+              {products && products.length === 0 ? (
+                <div className={classes["emptyAds"]}>
+                  <p>У вас ще немає оголошень</p>
+                  <span>
+                    <AiOutlineFrown size={24} />
+                  </span>
+                </div>
+              ) : (
                 products.map((product) => {
                   return (
                     <GoodsItem
@@ -118,7 +128,8 @@ const WalletPage = () => {
                       }}
                     />
                   );
-                })}
+                })
+              )}
             </div>
           </div>
         </div>

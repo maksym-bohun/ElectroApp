@@ -14,7 +14,12 @@ router.route("/resetPassword/:token").post(authController.resetPassword);
 
 router
   .route("/me")
-  .get(authController.protect, usersController.getMe, usersController.getUser);
+  .get(authController.protect, usersController.getMe, usersController.getUser)
+  .patch(
+    authController.protect,
+    userPhotoUpload.single("photo"),
+    usersController.changeUsersData
+  );
 
 router.route("/:id").get(usersController.getUser);
 router.route("/").get(usersController.getAllUsers);

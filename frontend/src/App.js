@@ -20,10 +20,12 @@ import { setProducts } from "./store/ProductsReducer";
 import { setCategories } from "./store/СategoriesReducer";
 import { setUsers } from "./store/UsersReducer";
 import Test from "./Test";
+import WalletPageEdit from "./components/walletPage/WalletPageEdit";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },
   { path: "/wallet", element: <WalletPage /> },
+  { path: "/editProfile", element: <WalletPageEdit /> },
   {
     path: "/:category",
     element: <AdvertismentsList />,
