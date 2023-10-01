@@ -33,7 +33,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.changeUsersData = async (req, res, next) => {
   const user = req.user;
-  // console.log(user.id);
+  console.log(req.body);
+
   const currentUser = await User.findById(user.id);
   // console.log("☘️", currentUser);
   if (req.file) {
@@ -46,10 +47,10 @@ exports.changeUsersData = async (req, res, next) => {
     });
 
     currentUser.photo = req.file.filename;
-    console.log(currentUser.photo);
-    console.log("------------------------");
-    console.log(req.file.filename);
   }
+
+  if (req.body.name) currentUser.name = req.body.name;
+  if (req.body.phoneNumber) currentUser.phoneNumber = req.body.phoneNumber;
 
   currentUser.save();
   res.status(200).json({ status: "success" });

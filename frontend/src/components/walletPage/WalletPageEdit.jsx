@@ -11,9 +11,11 @@ const WalletPageEdit = () => {
   const [currentUser, setCurrentUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumberInvalid, setPhoneNumberInvalid] = useState(false);
   const [image, setImage] = useState(defaultUserImage);
   const [currentImage, setCurrentImage] = useState(defaultUserImage);
   const [name, setName] = useState("");
+  const [nameInvalid, setNameInvalid] = useState(false);
   const navigate = useNavigate();
   const imageRef = useRef();
   const dispatch = useDispatch();
@@ -24,6 +26,24 @@ const WalletPageEdit = () => {
     console.log("START UPDATING USER");
     updateUser();
   }, []);
+
+  const checkInputs = (value) => {
+    if (value === "name") {
+      if (name.length > 0) return true;
+      else {
+        setNameInvalid(true);
+        return false;
+      }
+    }
+
+    if (value === "phoneNumber") {
+      if (phoneNumber.length === 9) return true;
+      else {
+        setPhoneNumberInvalid(true);
+        return false;
+      }
+    }
+  };
 
   const updateUser = (exit = false) => {
     const token = localStorage.getItem("token");
@@ -39,6 +59,7 @@ const WalletPageEdit = () => {
         if (data.status === "success") {
           setCurrentUser(data.data.user);
           setName(data.data.user.name);
+          setPhoneNumber(data.data.user.phoneNumber);
           if (!exit)
             setCurrentImage(
               require(`../../../../backend/images/users/${data.data.user.photo}`)
@@ -69,30 +90,32 @@ const WalletPageEdit = () => {
     if (image) {
       formData.append("photo", image);
     }
-    if (phoneNumber.length > 0) formData.append("phoneNumber", phoneNumber);
-    if (name.length > 0) formData.append("name", name);
+    if (checkInputs("phoneNumber")) formData.append("phoneNumber", phoneNumber);
+    if (checkInputs("name")) formData.append("name", name);
 
     const token = localStorage.getItem("token");
+    console.log("----- - -sd-- -- -", !phoneNumberInvalid && !nameInvalid);
+    if (checkInputs("phoneNumber") && checkInputs("name")) {
+      try {
+        console.log("Start");
+        const response = await fetch("http://127.0.0.1:8000/api/v1/users/me", {
+          method: "PATCH",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    try {
-      console.log("Start");
-      const response = await fetch("http://127.0.0.1:8000/api/v1/users/me", {
-        method: "PATCH",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        console.log("Data loaded successful");
-        setIsLoading(true);
-        updateUser(true);
-      } else {
-        console.error("An error occured");
+        if (response.ok) {
+          console.log("Data loaded successful");
+          setIsLoading(true);
+          updateUser(true);
+        } else {
+          console.error("An error occured");
+        }
+      } catch (error) {
+        console.error("Error: ", error);
       }
-    } catch (error) {
-      console.error("Error: ", error);
     }
   };
 
@@ -155,6 +178,7 @@ const WalletPageEdit = () => {
                   maxLength={13}
                   value={name}
                   onChange={changeNameHandler}
+                  className={nameInvalid ? classes["invalid-input"] : ""}
                 />
               </div>
 
@@ -165,6 +189,7 @@ const WalletPageEdit = () => {
                   maxLength={13}
                   value={`+380${phoneNumber}`}
                   onChange={changePhoneNumber}
+                  className={phoneNumberInvalid ? classes["invalid-input"] : ""}
                 />
               </div>
               {/* <button className={classes["logout-btn"]} onClick={logoutHandler}>
