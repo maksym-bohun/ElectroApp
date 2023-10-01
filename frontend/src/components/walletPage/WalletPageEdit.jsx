@@ -9,25 +9,25 @@ import { setUser } from "../../store/currentUserReducer";
 
 const WalletPageEdit = () => {
   const [currentUser, setCurrentUser] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(defaultUserImage);
+  const [currentImage, setCurrentImage] = useState(defaultUserImage);
   const [name, setName] = useState("");
   const navigate = useNavigate();
-  const currentUserState = useSelector((state) => {
-    console.log("GETTING USER FROM STATE");
-    return state.currentUserReducer.user;
-  });
   const imageRef = useRef();
   const dispatch = useDispatch();
-  const userData = useLocation();
 
-  console.log("Current USer", userData);
+  console.log("Current USer", currentUser);
 
-  const updateUser = () => {
+  useEffect(() => {
+    console.log("START UPDATING USER");
+    updateUser();
+  }, []);
+
+  const updateUser = (exit = false) => {
     const token = localStorage.getItem("token");
     setIsLoading(true);
-    console.log("setIsLoading");
     fetch("http://127.0.0.1:8000/api/v1/users/me", {
       headers: {
         "Content-type": "application/json",
@@ -39,25 +39,35 @@ const WalletPageEdit = () => {
         if (data.status === "success") {
           setCurrentUser(data.data.user);
           setName(data.data.user.name);
+          if (!exit)
+            setCurrentImage(
+              require(`../../../../backend/images/users/${data.data.user.photo}`)
+            );
           setPhoneNumber(data.data.user.phoneNumber);
           dispatch(setUser(data.data.user));
           console.log("✅✅✅✅✅✅✅✅✅✅✅");
-          setIsLoading(false);
+          setCurrentUser(data.data.user);
+          if (exit)
+            setTimeout(() => {
+              setIsLoading(false);
+              navigate("/wallet");
+            }, 1000);
+          else setIsLoading(false);
         } else {
           console.log("❗️❗️❗️❗️❗️❗️❗️❗️❗️❗️❗️");
           setIsLoading(false);
           navigate("/signin");
         }
-      });
+      })
+      .finally(() => {});
   };
 
   const submitHandler = async () => {
     const formData = new FormData();
 
-    console.log("name", name);
+    console.log("IMAGEeeeee", image);
     if (image) {
       formData.append("photo", image);
-      console.log("Image appended");
     }
     if (phoneNumber.length > 0) formData.append("phoneNumber", phoneNumber);
     if (name.length > 0) formData.append("name", name);
@@ -74,12 +84,10 @@ const WalletPageEdit = () => {
         },
       });
 
-      console.log(response);
-
       if (response.ok) {
-        updateUser();
         console.log("Data loaded successful");
-        setTimeout(() => navigate("/wallet"), 1000);
+        setIsLoading(true);
+        updateUser(true);
       } else {
         console.error("An error occured");
       }
@@ -106,8 +114,9 @@ const WalletPageEdit = () => {
   };
 
   const onFileSelect = (e) => {
-    const image = e.target.files[0];
-    setImage(image);
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+    setCurrentImage(URL.createObjectURL(selectedImage));
   };
 
   return (
@@ -119,10 +128,7 @@ const WalletPageEdit = () => {
           <div className={classes["info-wrapper"]}>
             <div>
               <img
-                src={
-                  require(`../../../../backend/images/users/${currentUser.photo}`) ||
-                  defaultUserImage
-                }
+                src={currentImage || defaultUserImage}
                 alt="user-image"
                 className={classes["user-img--edit"]}
               />

@@ -20,7 +20,13 @@ const WalletPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userIsLogged, setUserIsLogged] = useState(false);
   const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.currentUserReducer.user);
+  const currentUser = useSelector((state) => {
+    console.log("current user in state: ", state.currentUserReducer.user);
+    return state.currentUserReducer.user;
+  });
+
+  console.log("I AM IN WALLET PAGE");
+  console.log("current user", currentUser);
 
   const editProfileHandler = () => {
     console.log("UUSSEERR", user);
