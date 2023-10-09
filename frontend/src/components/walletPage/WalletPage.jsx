@@ -1,4 +1,9 @@
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import Navigation from "../navigation/Navigation";
 import Button from "../UI/Button";
 import classes from "./WalletPage.module.css";
@@ -20,13 +25,12 @@ const WalletPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userIsLogged, setUserIsLogged] = useState(false);
   const navigate = useNavigate();
+  const currentUserFromLoader = useLoaderData();
+
   const currentUser = useSelector((state) => {
     console.log("current user in state: ", state.currentUserReducer.user);
     return state.currentUserReducer.user;
   });
-
-  console.log("I AM IN WALLET PAGE");
-  console.log("current user", currentUser);
 
   const editProfileHandler = () => {
     console.log("UUSSEERR", user);
@@ -35,6 +39,8 @@ const WalletPage = () => {
   };
 
   useEffect(() => {
+    console.log("-------", currentUserFromLoader);
+
     if (localStorage.getItem("token") !== "") {
       if (Object.values(currentUser).length !== 0) {
         console.log(1);
@@ -42,29 +48,10 @@ const WalletPage = () => {
         setProducts(currentUser.products);
         setIsLoading(false);
       } else {
-        console.log(2);
-        setIsLoading(true);
-        const token = localStorage.getItem("token");
-        // const id = jwt_decode(token).id;
-        fetch("http://127.0.0.1:8000/api/v1/users/me", {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.status === "success") {
-              setIsLoading(false);
-              setUser(data.data.user);
-              setProducts(data.data.user.products);
-              setUserIsLogged(true);
-            } else {
-              setIsLoading(false);
-              setUserIsLogged(false);
-              navigate("/signin");
-            }
-          });
+        setIsLoading(false);
+        setUser(currentUserFromLoader);
+        setProducts(currentUserFromLoader.products);
+        setUserIsLogged(true);
       }
     } else {
       navigate("/signin");

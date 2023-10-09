@@ -1,6 +1,8 @@
 import MainPage from "./components/mainPage/MainPage";
 import WalletPage from "./components/walletPage/WalletPage";
-import AdvertismentPage from "./components/advertismentPage/AdvertismentPage";
+import AdvertismentPage, {
+  advertismentPageLoader,
+} from "./components/advertismentPage/AdvertismentPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdvertismentsList from "./components/advertismentsList/AdvertismentsListPage";
 import CreateAdvertismentPage from "./components/newAdvertisment/CreateAdvertismentPage";
@@ -24,13 +26,40 @@ import WalletPageEdit from "./components/walletPage/WalletPageEdit";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },
-  { path: "/wallet", element: <WalletPage /> },
+  {
+    path: "/wallet",
+    element: <WalletPage />,
+    loader: async () => {
+      const token = localStorage.getItem("token");
+      if (token !== "") {
+        const res = await fetch("http://127.0.0.1:8000/api/v1/users/me", {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        console.log("wallet loader", data.data.user);
+        return data.data.user;
+      }
+    },
+  },
   { path: "/editProfile", element: <WalletPageEdit /> },
   {
     path: "/:category",
     element: <AdvertismentsList />,
   },
-  { path: "/:category/:advertismentId", element: <AdvertismentPage /> },
+  {
+    path: "/:category/:advertismentId",
+    element: <AdvertismentPage />,
+    loader: async ({ params }) => {
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`
+      );
+      const data = await res.json();
+      return data.data;
+    },
+  },
   { path: "/createAdvertisment", element: <CreateAdvertismentPage /> },
   { path: "/allAdvertisments", element: <AllAdvertismentsPage /> },
   { path: "/registration", element: <Registration /> },

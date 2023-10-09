@@ -37,9 +37,10 @@ const WalletPageEdit = () => {
     }
 
     if (value === "phoneNumber") {
-      if (phoneNumber.length === 9) return true;
+      if ((phoneNumber + "").length === 9) return true;
       else {
         setPhoneNumberInvalid(true);
+        console.log("PHONE NUMBER INCORRECT", phoneNumber);
         return false;
       }
     }
@@ -86,7 +87,6 @@ const WalletPageEdit = () => {
   const submitHandler = async () => {
     const formData = new FormData();
 
-    console.log("IMAGEeeeee", image);
     if (image) {
       formData.append("photo", image);
     }
@@ -94,7 +94,6 @@ const WalletPageEdit = () => {
     if (checkInputs("name")) formData.append("name", name);
 
     const token = localStorage.getItem("token");
-    console.log("----- - -sd-- -- -", !phoneNumberInvalid && !nameInvalid);
     if (checkInputs("phoneNumber") && checkInputs("name")) {
       try {
         console.log("Start");

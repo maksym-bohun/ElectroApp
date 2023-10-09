@@ -17,7 +17,6 @@ const AdvertismentDescription = ({
   description,
   id,
   setIsLoading,
-  isLoading,
 }) => {
   const [postIsLiked, setPostIsLiked] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -31,7 +30,7 @@ const AdvertismentDescription = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     if (
       Object.values(currentUser).length === 0 &&
       localStorage.getItem("token") !== ""

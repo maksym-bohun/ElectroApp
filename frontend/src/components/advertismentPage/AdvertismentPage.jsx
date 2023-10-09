@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLoaderData, useLocation, useParams } from "react-router-dom";
 import Navigation from "../navigation/Navigation";
 import classes from "./AdvertismentPage.module.css";
 import AdvertismentDescription from "./AdvertismentDescription";
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import FsLightbox from "fslightbox-react";
 import Spinner from "../UI/Spinner";
+import { setProducts } from "../../store/ProductsReducer";
 
 const AdvertismentPage = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -17,8 +18,10 @@ const AdvertismentPage = () => {
   const params = useParams();
   const products = useSelector((state) => state.productsReducer.products);
   let seller = null;
+  const product = useLoaderData();
 
   useEffect(() => {
+    console.log(product);
     fetch(
       `http://127.0.0.1:8000/api/v1/products/viewAdvertisment/${params.advertismentId}`,
       {
@@ -30,25 +33,28 @@ const AdvertismentPage = () => {
   });
 
   useEffect(() => {
-    if (products === null) {
-      console.log("START LOADING");
-      setIsLoading(true);
-      fetch(`http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setCurrentProduct(data.data);
-          seller =
-            location.state === null ? data.data.author : location.state.author;
-          setIsLoading(false);
-        });
-    } else {
-      const product = products.filter(
-        (prod) => prod.id === params.advertismentId
-      )[0];
-      setCurrentProduct(product);
-      seller = location.state === null ? product : location.state.author;
-      setIsLoading(false);
-    }
+    setCurrentProduct(product);
+    setIsLoading(false);
+
+    // if (products === null) {
+    //   console.log("START LOADING");
+    //   setIsLoading(true);
+    //   fetch(`http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`)
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       setCurrentProduct(data.data);
+    //       seller =
+    //         location.state === null ? data.data.author : location.state.author;
+    //       setIsLoading(false);
+    //     });
+    // } else {
+    //   const product = products.filter(
+    //     (prod) => prod.id === params.advertismentId
+    //   )[0];
+    //   setCurrentProduct(product);
+    //   seller = location.state === null ? product : location.state.author;
+    //   setIsLoading(false);
+    // }
   }, [products]);
 
   useEffect(() => {
@@ -111,3 +117,12 @@ const AdvertismentPage = () => {
 };
 
 export default AdvertismentPage;
+
+export const advertismentPageLoader = async ({ params }) => {
+  const response = await fetch(
+    `http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`
+  );
+  const data = await response.json();
+  console.log(params.advertismentId);
+  return data;
+};
