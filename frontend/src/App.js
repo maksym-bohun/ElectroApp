@@ -8,7 +8,9 @@ import AdvertismentsList from "./components/advertismentsList/AdvertismentsListP
 import CreateAdvertismentPage from "./components/newAdvertisment/CreateAdvertismentPage";
 import DragAndDropImage from "./DragAndDropImage/DragAndDropImage";
 import { useDispatch, useSelector } from "react-redux";
-import AllAdvertismentsPage from "./components/AllAdvertisments/AllAdvertismentsPage";
+import AllAdvertismentsPage, {
+  AllAdvertismentsLoader,
+} from "./components/AllAdvertisments/AllAdvertismentsPage";
 import jwt_decode from "jwt-decode";
 
 import PersonalOffice from "./components/Signin/Signin";
@@ -52,16 +54,14 @@ const router = createBrowserRouter([
   {
     path: "/:category/:advertismentId",
     element: <AdvertismentPage />,
-    loader: async ({ params }) => {
-      const res = await fetch(
-        `http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`
-      );
-      const data = await res.json();
-      return data.data;
-    },
+    loader: advertismentPageLoader,
   },
   { path: "/createAdvertisment", element: <CreateAdvertismentPage /> },
-  { path: "/allAdvertisments", element: <AllAdvertismentsPage /> },
+  {
+    path: "/allAdvertisments",
+    element: <AllAdvertismentsPage />,
+    loader: AllAdvertismentsLoader,
+  },
   { path: "/registration", element: <Registration /> },
   { path: "/signin", element: <SignIn /> },
   { path: "/users/:id", element: <UsersAdverts /> },

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLoaderData, useLocation } from "react-router-dom";
 import GoodsItem from "../advertismentsList/Goods/GoodsItem";
 import classes from "./AllAdvertismentsPage.module.css";
 import Navigation from "../navigation/Navigation";
@@ -15,9 +15,10 @@ const AllAdvertismentsPage = () => {
   const [productsLoaded, setProductsLoaded] = useState(false);
   // console.log(state);
   let location = useLocation();
+  const allProducts = useLoaderData();
   const productsState = useSelector((state) => state.productsReducer.products);
   let initialProducts;
-  const inputValue = location.state.inputValue;
+  const inputValue = location.state.inputValue.toLowerCase();
 
   const setFiltersLoadedHandler = (res) => {
     console.log(res);
@@ -25,8 +26,16 @@ const AllAdvertismentsPage = () => {
   };
 
   useEffect(() => {
-    setProducts(productsState);
-    setProductsLoaded(false);
+    // setProducts(productsState);
+    console.log(allProducts);
+    setDefaultProducts(
+      allProducts.filter(
+        (prod) =>
+          prod.name.toLowerCase().includes(inputValue) ||
+          prod.description.toLowerCase().includes(inputValue)
+      )
+    );
+    setProductsLoaded(true);
   }, [productsState]);
 
   const getFiltersHandler = (filters) => {
@@ -57,6 +66,7 @@ const AllAdvertismentsPage = () => {
           {!listIsEmpty && (
             <div className={classes.list}>
               {products.map((item) => {
+                console.log("item", item);
                 return (
                   <NavLink
                     to={`/allAdvertisments/${item.id}`}
@@ -66,7 +76,7 @@ const AllAdvertismentsPage = () => {
                   >
                     <GoodsItem
                       name={item.name}
-                      image={item.image}
+                      image={item.images[0]}
                       technicalInfo={item.technicalInfo}
                       adress={item.adress}
                       price={item.price}
@@ -95,3 +105,11 @@ const AllAdvertismentsPage = () => {
 };
 
 export default AllAdvertismentsPage;
+
+export const AllAdvertismentsLoader = async () => {
+  const res = await fetch("http://127.0.0.1:8000/api/v1/products");
+  const data = await res.json();
+
+  console.log("PRODS ", data.data);
+  return data.data;
+};

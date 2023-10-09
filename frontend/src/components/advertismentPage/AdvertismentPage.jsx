@@ -119,10 +119,9 @@ const AdvertismentPage = () => {
 export default AdvertismentPage;
 
 export const advertismentPageLoader = async ({ params }) => {
-  const response = await fetch(
+  const res = await fetch(
     `http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`
   );
-  const data = await response.json();
-  console.log(params.advertismentId);
-  return data;
+  const data = await res.json();
+  return data.data;
 };
