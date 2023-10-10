@@ -1,23 +1,13 @@
-import {
-  Navigate,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import Navigation from "../navigation/Navigation";
 import Button from "../UI/Button";
 import classes from "./WalletPage.module.css";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signout } from "../../store/UserIsLoggedReducer";
-import AdvertismentsList from "./../advertismentsList/AdvertismentsListPage";
-import jwt_decode from "jwt-decode";
 import defaultUserImage from "./../../images/user.png";
-import GoodsItem from "../advertismentsList/Goods/GoodsItem";
-import SignIn from "../Signin/Signin";
 import { AiOutlineEdit, AiOutlineFrown } from "react-icons/ai";
 import Spinner from "../UI/Spinner";
-import WalletPageEdit from "./WalletPageEdit";
+import WalletProducts from "./WalletProducts";
 
 const WalletPage = () => {
   const [user, setUser] = useState({});
@@ -39,8 +29,6 @@ const WalletPage = () => {
   };
 
   useEffect(() => {
-    console.log("-------", currentUserFromLoader);
-
     if (localStorage.getItem("token") !== "") {
       if (Object.values(currentUser).length !== 0) {
         console.log(1);
@@ -92,8 +80,8 @@ const WalletPage = () => {
             </div>
           </div>
           <div className={classes.advertisments}>
-            <h2>Ваші оголошення</h2>
-            <div className={classes["adverts-container"]}>
+            {/* <h2>Ваші оголошення</h2> */}
+            {/* <div className={classes["adverts-container"]}>
               {products && products.length === 0 ? (
                 <div className={classes["emptyAds"]}>
                   <p>У вас ще немає оголошень</p>
@@ -123,7 +111,12 @@ const WalletPage = () => {
                   );
                 })
               )}
-            </div>
+            </div> */}
+            <WalletProducts
+              usersAdverts={products}
+              user={user}
+              likedProducts={user?.likedProducts}
+            />
           </div>
         </div>
       )}

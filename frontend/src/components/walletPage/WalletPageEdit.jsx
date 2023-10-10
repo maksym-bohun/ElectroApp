@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import defaultUserImage from "./../../images/user.png";
 import Spinner from "../UI/Spinner";
 import { setUser } from "../../store/currentUserReducer";
+import Button from "../UI/Button";
 
 const WalletPageEdit = () => {
   const [currentUser, setCurrentUser] = useState({});
@@ -196,7 +197,9 @@ const WalletPageEdit = () => {
               </button> */}
             </div>
           </div>
-          <button onClick={submitHandler}>Submit</button>
+          <Button onClick={submitHandler} className={classes.btn}>
+            Зберегти зміни
+          </Button>
         </div>
       )}
     </>

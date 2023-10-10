@@ -5,7 +5,8 @@
 }
 
 .btn {
-  margin-top: 1rem;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
 }
 
 .wrapper {
@@ -147,4 +148,9 @@
 .invalid-input {
   border: none;
   border: 2px solid #ed4337;
+}
+
+.link {
+  color: #000;
+  text-decoration: none;
 }
