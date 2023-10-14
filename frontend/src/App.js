@@ -6,25 +6,23 @@ import AdvertismentPage, {
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdvertismentsList from "./components/advertismentsList/AdvertismentsListPage";
 import CreateAdvertismentPage from "./components/newAdvertisment/CreateAdvertismentPage";
-import DragAndDropImage from "./DragAndDropImage/DragAndDropImage";
 import { useDispatch, useSelector } from "react-redux";
 import AllAdvertismentsPage, {
   AllAdvertismentsLoader,
 } from "./components/AllAdvertisments/AllAdvertismentsPage";
 import jwt_decode from "jwt-decode";
 
-import PersonalOffice from "./components/Signin/Signin";
 import Registration from "./components/Registration/Registration";
 import SignIn from "./components/Signin/Signin";
-import DnDImage from "./DragAndDropImage/DnDImage";
 import UsersAdverts from "./components/UsersAdverts/UsersAdverts";
 import { useEffect } from "react";
 import { setUser } from "./store/currentUserReducer";
 import { setProducts } from "./store/ProductsReducer";
 import { setCategories } from "./store/СategoriesReducer";
 import { setUsers } from "./store/UsersReducer";
-import Test from "./Test";
 import WalletPageEdit from "./components/walletPage/WalletPageEdit";
+import Chat from "./components/Chat/Chat";
+import JoinChatForm from "./components/Chat/JoinChatForm";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },
@@ -42,7 +40,7 @@ const router = createBrowserRouter([
         });
         const data = await res.json();
         console.log("wallet loader", data.data.user);
-        return data.data.user;
+        return data.data.user || null;
       }
     },
   },
@@ -106,7 +104,8 @@ function App() {
     // return () => clearInterval(intervalId);
   }, []);
 
-  return <RouterProvider router={router} />;
+  // return <RouterProvider router={router} />;
+  return <JoinChatForm></JoinChatForm>;
 }
 
 export default App;
