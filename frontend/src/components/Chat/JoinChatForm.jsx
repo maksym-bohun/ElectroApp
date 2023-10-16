@@ -14,6 +14,16 @@ const JoinChatForm = () => {
     if (username !== "" && room !== "") {
       socket.emit("join_room", room);
       setShowChat(true);
+      fetch("http://127.0.0.1:8000/api/v1/chats/createRoom", {
+        method: "POST",
+        body: {
+          advertismentId: "65199018a4b3253e5789f1e4",
+          usersIds: ["64f0e01dce160f6e347e3062", "651583223893bb67083dddea"],
+          // messages: ["Hello", "Hi", "how are you?", "OK"],
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data));
     }
   };
 

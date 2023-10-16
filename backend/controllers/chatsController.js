@@ -1,13 +1,14 @@
 const ChatModel = require("../models/chatModel");
 
 exports.createChat = async (req, res) => {
+  console.log(req.body);
   try {
-    const chatData = req.body;
-    const chat = await ChatModel.create(chatData);
+    const chat = await ChatModel.create(req.body);
     const savedChat = await chat.save();
-    res.json({ status: "success", chat: savedChat });
+    console.log("CHAT CREATED🫡🫡🫡🫡🫡🫡");
+    res.status(201).json({ status: "success", chat: savedChat });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create chat" });
+    res.status(500).json({ status: "failed", error: error.message });
   }
 };
 
@@ -19,6 +20,35 @@ exports.getChat = async (req, res) => {
       return res.status(404).json({ error: "Chat not found" });
     }
     res.json(chat);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch chat" });
+  }
+};
+
+exports.getChatByUsers = async (req, res, next) => {
+  try {
+    const currentUser = req.body.users.filter(
+      (user) => user.role === "user"
+    )[0];
+    const advertisment = req.body.advertisement_id;
+
+    const chat = await ChatModel.find({
+      advertisement_id: advertisment,
+      users: {
+        $elemMatch: {
+          user_id: currentUser.user_id,
+        },
+      },
+    });
+    if (!chat) {
+      res.status(500).json({ status: "fail" });
+    }
+    if (chat.length === 0) {
+      next();
+    } else {
+      console.log("Chat found!💙💙💙💙");
+      res.status(200).json({ status: "success", chat: chat[0] });
+    }
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch chat" });
   }

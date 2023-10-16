@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const ChatSchema = new mongoose.Schema({
-  _id: mongoose.Schema.ObjectId,
   users: [
     {
       user_id: mongoose.Schema.ObjectId,

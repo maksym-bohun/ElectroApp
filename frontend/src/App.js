@@ -63,6 +63,7 @@ const router = createBrowserRouter([
   { path: "/registration", element: <Registration /> },
   { path: "/signin", element: <SignIn /> },
   { path: "/users/:id", element: <UsersAdverts /> },
+  { path: "/chat/:id", element: <Chat /> },
 ]);
 
 function App() {
@@ -104,8 +105,8 @@ function App() {
     // return () => clearInterval(intervalId);
   }, []);
 
-  // return <RouterProvider router={router} />;
-  return <JoinChatForm></JoinChatForm>;
+  return <RouterProvider router={router} />;
+  // return <JoinChatForm></JoinChatForm>;
 }
 
 export default App;
