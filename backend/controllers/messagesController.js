@@ -1,15 +1,40 @@
 const MessageModel = require("../models/messageModel");
+const ChatModel = require("../models/chatModel");
+const catchAsync = require("../utils/catchAsync");
 
-exports.sendMessage = async (req, res) => {
-  try {
-    const messageData = req.body; // Данные для создания сообщения, включая chat_id, sender_id, text
-    const message = MessageModel.create(messageData);
-    const savedMessage = await message.save();
-    res.json(savedMessage);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to create message" });
+exports.addMessage = catchAsync(async (req, res, next) => {
+  const { from, to, message, advertismentId } = req.body;
+  let chat_id;
+  const chatExists = await ChatModel.find({
+    "users.sender": from,
+    "users.author": to,
+  });
+
+  if (chatExists && chatExists.length === 0) {
+    const newChat = await ChatModel.create({
+      users: { sender: from, author: to },
+      advertisement_id: advertismentId,
+      created_at: Date.now(),
+    });
+    chat_id = newChat._id;
+  } else {
+    chat_id = chatExists[0]._id;
   }
-};
+
+  const data = await MessageModel.create({
+    message: { text: message },
+    users: [from, to],
+    sender: from,
+    chat_id,
+  });
+  if (data) {
+    return res.json({ status: "success", msg: "Message added successfully" });
+  }
+  return req.json({
+    status: "fail",
+    msg: "Failed to add message to the database",
+  });
+});
 
 exports.getMessagesFromChat = async (req, res) => {
   try {

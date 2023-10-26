@@ -22,7 +22,6 @@ import { setCategories } from "./store/СategoriesReducer";
 import { setUsers } from "./store/UsersReducer";
 import WalletPageEdit from "./components/walletPage/WalletPageEdit";
 import Chat from "./components/Chat/Chat";
-import JoinChatForm from "./components/Chat/JoinChatForm";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },

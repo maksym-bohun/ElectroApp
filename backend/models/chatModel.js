@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 
 const ChatSchema = new mongoose.Schema({
-  users: [
-    {
-      user_id: mongoose.Schema.ObjectId,
-      role: String,
-    },
-  ],
+  users: {
+    sender: { type: mongoose.Schema.ObjectId, ref: "User" },
+    author: { type: mongoose.Schema.ObjectId, ref: "User" },
+  },
+
   advertisement_id: mongoose.Schema.ObjectId,
   created_at: Date,
 });

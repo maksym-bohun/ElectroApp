@@ -26,6 +26,8 @@ exports.getChat = async (req, res) => {
 };
 
 exports.getChatByUsers = async (req, res, next) => {
+  console.log("GETTING CHAT");
+  console.log(req.body);
   try {
     const currentUser = req.body.users.filter(
       (user) => user.role === "user"

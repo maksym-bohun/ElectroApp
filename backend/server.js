@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const app = require("./app");
 const { Server } = require("socket.io");
+const messagesController = require("./controllers/messagesController");
 
 process.on("uncaughtException", (err) => {
   console.log("Uncaught exception! 💥 Shutting down...");
@@ -46,8 +47,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    console.log(data);
-    socket.to(data.room).emit("receive_message", data);
+    console.log("DATA 1: ", data);
+    socket.to(data.chat_id).emit("receive_message", data);
   });
 
   socket.on("disconnect", () => {

@@ -7,12 +7,11 @@ import io from "socket.io-client";
 import Chat from "../Chat/Chat";
 import { useSelector } from "react-redux";
 
-const socket = io.connect("http://127.0.0.1:8000");
-
 const AdvertismentPageSellersInfo = ({ seller }) => {
   const [showNumber, setShowNumber] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [room, setRoom] = useState("");
+  const [socket, setSocket] = useState(null);
   const params = useParams();
   const currentUser = useSelector((state) => state.currentUserReducer.user);
 
@@ -33,6 +32,7 @@ const AdvertismentPageSellersInfo = ({ seller }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           users: [
@@ -46,6 +46,13 @@ const AdvertismentPageSellersInfo = ({ seller }) => {
 
       const data = await res.json();
       console.log("DATA ", data);
+      if (data.status === "success") {
+        setShowChat(true);
+        setSocket(
+          io.connect(`http://127.0.0.1:8000/api/v1/chats/${data.chat._id}`)
+        );
+        setRoom(data.chat._id);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -85,7 +92,9 @@ const AdvertismentPageSellersInfo = ({ seller }) => {
       <Link to={`/users/${seller._id}`} state={seller}>
         Seller's advertisments
       </Link>
-      {showChat && <Chat username="Maks" socket={socket} room={room} />}
+      {showChat && socket && (
+        <Chat username="Maks" socket={socket} room={room} />
+      )}
     </div>
   );
 };
