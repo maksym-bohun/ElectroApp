@@ -38,8 +38,8 @@ const router = createBrowserRouter([
           },
         });
         const data = await res.json();
-        console.log("wallet loader", data.data.user);
-        return data.data.user || null;
+        console.log("wallet loader", data.data);
+        return data.data || null;
       }
     },
   },

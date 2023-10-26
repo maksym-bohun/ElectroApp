@@ -8,17 +8,16 @@ import defaultUserImage from "./../../images/user.png";
 import { AiOutlineEdit, AiOutlineFrown } from "react-icons/ai";
 import Spinner from "../UI/Spinner";
 import WalletProducts from "./WalletProducts";
+import { getMeRoute } from "../../utils/APIRoutes";
 
 const WalletPage = () => {
   const [user, setUser] = useState({});
   const [products, setProducts] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [userIsLogged, setUserIsLogged] = useState(false);
   const navigate = useNavigate();
-  const currentUserFromLoader = useLoaderData();
 
   const currentUser = useSelector((state) => {
-    console.log("current user in state: ", state.currentUserReducer.user);
+    console.log("current user in state: ", state.currentUserReducer?.user);
     return state.currentUserReducer.user;
   });
 
@@ -28,19 +27,49 @@ const WalletPage = () => {
     navigate("/editProfile", { someData: "This is some data" });
   };
 
+  const fetchMe = async () => {
+    console.log("Fetch me");
+    const res = await fetch(getMeRoute, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    const data = await res.json();
+    console.log("DAAAATAAA", data);
+    setUser(data.data);
+    setProducts(data.data.products);
+
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log("data.data", data.data);
+    // });
+
+    setIsLoading(false);
+  };
+
   useEffect(() => {
+    if (
+      !localStorage.getItem("token") ||
+      localStorage.getItem("token") === ""
+    ) {
+      setIsLoading(false);
+      navigate("/signin");
+    }
+
     if (localStorage.getItem("token") !== "") {
-      if (Object.values(currentUser).length !== 0) {
+      if (currentUser && Object.values(currentUser).length !== 0) {
         console.log(1);
         setUser(currentUser);
         setProducts(currentUser.products);
         setIsLoading(false);
       } else {
-        setIsLoading(false);
-        setUser(currentUserFromLoader);
-        setProducts(currentUserFromLoader.products);
-        setUserIsLogged(true);
+        fetchMe();
       }
+      //  else {
+      //   setIsLoading(false);
+      //   console.log("currentUserFromLoader", currentUserFromLoader);
+      //   setUser(currentUserFromLoader);
+      //   setProducts(currentUserFromLoader.products);
+      //   setUserIsLogged(true);
+      // }
     } else {
       navigate("/signin");
     }
@@ -80,38 +109,7 @@ const WalletPage = () => {
             </div>
           </div>
           <div className={classes.advertisments}>
-            {/* <h2>Ваші оголошення</h2> */}
-            {/* <div className={classes["adverts-container"]}>
-              {products && products.length === 0 ? (
-                <div className={classes["emptyAds"]}>
-                  <p>У вас ще немає оголошень</p>
-                  <span>
-                    <AiOutlineFrown size={24} />
-                  </span>
-                </div>
-              ) : (
-                products.map((product) => {
-                  return (
-                    <GoodsItem
-                      key={product.id}
-                      image={product.images[0]}
-                      name={product.name}
-                      technicalInfo={product.technicalInfo}
-                      price={product.price}
-                      adress={product.location.description}
-                      phoneNumber={user.phoneNumber}
-                      id={product.id}
-                      type="wallet"
-                      stats={{
-                        views: product.views,
-                        phoneNumberViews: product.phoneNumberViews,
-                        likes: product.likes,
-                      }}
-                    />
-                  );
-                })
-              )}
-            </div> */}
+            {console.log("products: ", products)}
             <WalletProducts
               usersAdverts={products}
               user={user}

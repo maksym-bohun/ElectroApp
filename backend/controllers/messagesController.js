@@ -60,6 +60,7 @@ exports.deleteMessage = async (req, res) => {
 };
 
 exports.getAllMessages = catchAsync(async (req, res, next) => {
+  console.log(req.body, "\n\n\n\n");
   const { from, to } = req.body;
   const chat = await ChatModel.find({
     "users.sender": from,

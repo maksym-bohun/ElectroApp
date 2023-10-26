@@ -4,7 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const fs = require("fs");
 
 exports.getMe = (req, res, next) => {
-  // console.log(req.user);
+  console.log("GET ME");
   req.params.id = req.user.id;
   next();
 };
@@ -17,9 +17,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: {
-      user,
-    },
+    data: user,
   });
 });
 

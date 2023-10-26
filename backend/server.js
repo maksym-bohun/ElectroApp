@@ -39,20 +39,18 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log(`✅User connected:  ${socket.id}`);
-
-  socket.on("join_room", (data) => {
-    socket.join(data);
-    console.log(`User with ID ${socket.id} joind room ${data}`);
+  global.chatSocket = socket;
+  socket.on("add-user", (userId) => {
+    onlineUsers.set(userId, socket.id);
   });
 
-  socket.on("send_message", (data) => {
-    console.log("DATA 1: ", data);
-    socket.to(data.chat_id).emit("receive_message", data);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected ", socket.id);
+  socket.on("send-message", (data) => {
+    console.log("✅", data);
+    const sendUserSocket = onlineUsers.get(data.to);
+    console.log(onlineUsers);
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+    }
   });
 });
 

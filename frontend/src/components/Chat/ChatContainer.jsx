@@ -18,12 +18,11 @@ function ChatContainer({ currentChat, currentUser, socket, advertisement }) {
       from: currentChat.users.sender._id,
       to: currentChat.users.author._id,
     });
-    console.log(response.data.messages);
+    console.log(response.data);
     setMessages(response.data.messages);
   };
 
   useEffect(() => {
-    console.log("current chat: ", currentChat);
     if (currentChat) {
       getMessages();
       setIsLoaded(true);
@@ -44,7 +43,11 @@ function ChatContainer({ currentChat, currentUser, socket, advertisement }) {
     });
 
     const msgs = [...messages];
-    msgs.push({ fromSelf: true, message });
+    msgs.push({
+      sender: currentChat.users.sender._id,
+      message: { text: message },
+    });
+    console.log("msgs", msgs);
     setMessages(msgs);
   };
 
@@ -125,7 +128,7 @@ const Container = styled.div`
   }
   .chat-header {
     display: flex;
-    background-color: #acacac;
+    background-color: #373737;
     border-top-right-radius: 12px;
     border-top-left-radius: 12px;
     justify-content: space-between;
@@ -162,7 +165,7 @@ const Container = styled.div`
     padding: 1rem 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    // gap: 1rem;
     overflow: auto;
     &::-webkit-scrollbar {
       width: 0.2rem;

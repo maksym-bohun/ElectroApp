@@ -21,6 +21,18 @@ const allowedOrigins = ["www.example1.com", "www.example2.com"];
 app.use(bodyParser.json({ limit: "20mb" }));
 app.use(bodyParser.urlencoded({ limit: "20mb", extended: true }));
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // If you are using cookies or sessions
+};
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -35,6 +47,7 @@ app.use(
       }
       return callback(null, true);
     },
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 

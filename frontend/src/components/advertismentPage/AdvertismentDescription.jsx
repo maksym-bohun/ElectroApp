@@ -9,6 +9,7 @@ import {
   likeProduct,
   setUser,
 } from "../../store/currentUserReducer";
+import { getMeRoute } from "../../utils/APIRoutes";
 
 const AdvertismentDescription = ({
   name,
@@ -23,10 +24,12 @@ const AdvertismentDescription = ({
   const [lastClickTime, setLastClickTime] = useState(0);
 
   const params = useParams();
-  const currentUser = useSelector((state) => state.currentUserReducer.user);
-  const usersLikedProducts = useSelector(
-    (state) => state.currentUserReducer.user.likedProducts
-  );
+  const currentUser = useSelector((state) => {
+    return state.currentUserReducer;
+  });
+  const usersLikedProducts = useSelector((state) => {
+    return state.currentUserReducer.likedProducts;
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,7 +38,7 @@ const AdvertismentDescription = ({
       Object.values(currentUser).length === 0 &&
       localStorage.getItem("token") !== ""
     ) {
-      fetch(`http://127.0.0.1:8000/api/v1/users/me`, {
+      fetch(getMeRoute, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
         .then((res) => res.json())
@@ -72,9 +75,8 @@ const AdvertismentDescription = ({
               "Content-type": "application/json",
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-          })
-            .then((res) => res.json())
-            .then((data) => console.log(data));
+          }).then((res) => res.json());
+          // .then((data) => console.log(data));
         }
       } else {
         console.log("Подождите 5 секунд перед следующим кликом.");
@@ -95,7 +97,7 @@ const AdvertismentDescription = ({
         .then((data) => {
           if (data.status === "success") {
             setPostIsLiked(
-              data.data.user.likedProducts.includes(params.advertismentId)
+              data.data.likedProducts.includes(params.advertismentId)
             );
           }
         });

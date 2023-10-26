@@ -20,6 +20,15 @@ const CreateAdvertismentPage = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (
+      !localStorage.getItem("token") ||
+      localStorage.getItem("token") === ""
+    ) {
+      navigate("/signin");
+    }
+  }, []);
+
+  useEffect(() => {
     fetch("http://127.0.0.1:8000/api/v1/categories")
       .then((res) => res.json())
       .then((data) => {

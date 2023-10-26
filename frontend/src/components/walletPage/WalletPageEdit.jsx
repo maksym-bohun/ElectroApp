@@ -59,17 +59,17 @@ const WalletPageEdit = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
-          setCurrentUser(data.data.user);
-          setName(data.data.user.name);
-          setPhoneNumber(data.data.user.phoneNumber);
+          setCurrentUser(data.data);
+          setName(data.data.name);
+          setPhoneNumber(data.data.phoneNumber);
           if (!exit)
             setCurrentImage(
-              require(`../../../../backend/images/users/${data.data.user.photo}`)
+              require(`../../../../backend/images/users/${data.data.photo}`)
             );
-          setPhoneNumber(data.data.user.phoneNumber);
-          dispatch(setUser(data.data.user));
+          setPhoneNumber(data.data.phoneNumber);
+          dispatch(setUser(data.data));
           console.log("✅✅✅✅✅✅✅✅✅✅✅");
-          setCurrentUser(data.data.user);
+          setCurrentUser(data.data);
           if (exit)
             setTimeout(() => {
               setIsLoading(false);

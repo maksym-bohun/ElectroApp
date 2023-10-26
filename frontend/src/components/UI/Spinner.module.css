@@ -1,6 +1,6 @@
 .spinner {
   position: absolute;
-  top: 57%;
-  left: 63%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
 }
