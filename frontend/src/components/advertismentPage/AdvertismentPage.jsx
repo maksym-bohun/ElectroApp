@@ -21,7 +21,6 @@ const AdvertismentPage = () => {
   const product = useLoaderData();
 
   useEffect(() => {
-    console.log(product);
     fetch(
       `http://127.0.0.1:8000/api/v1/products/viewAdvertisment/${params.advertismentId}`,
       {
@@ -37,7 +36,6 @@ const AdvertismentPage = () => {
     setIsLoading(false);
 
     // if (products === null) {
-    //   console.log("START LOADING");
     //   setIsLoading(true);
     //   fetch(`http://127.0.0.1:8000/api/v1/products/${params.advertismentId}`)
     //     .then((res) => res.json())
@@ -73,7 +71,6 @@ const AdvertismentPage = () => {
       const id =
         location.pathname.split("/")[location.pathname.split("/").length - 1];
     } else {
-      console.log("CURRENT", currentProduct);
     }
 
     return (

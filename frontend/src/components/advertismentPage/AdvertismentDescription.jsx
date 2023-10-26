@@ -44,7 +44,6 @@ const AdvertismentDescription = ({
             dispatch(setUser(data.data.user));
           } else {
             setIsLoading(false);
-            console.log(currentUser);
           }
         });
     } else setIsLoading(false);
@@ -63,9 +62,8 @@ const AdvertismentDescription = ({
               "Content-type": "application/json",
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-          })
-            .then((res) => res.json())
-            .then((data) => console.log(data));
+          }).then((res) => res.json());
+          // .then((data) => console.log(data));
         } else {
           setPostIsLiked(true);
           dispatch(likeProduct(id));

@@ -3,7 +3,11 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import { getAndPostChat, host } from "../../utils/APIRoutes";
+import {
+  getAdvertisementRoute,
+  getAndPostChat,
+  host,
+} from "../../utils/APIRoutes";
 import { useSelector } from "react-redux";
 import Contacts from "./Contacts";
 import Welcome from "./Welcome";
@@ -16,7 +20,7 @@ import ChatContainer from "./ChatContainer";
 export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [contacts, setContacts] = useState([]);
+  const [currentAdv, setCurrentAdv] = useState(null);
   const navigate = useNavigate();
   const params = useParams();
 
@@ -59,23 +63,37 @@ export default function Chat() {
       });
       setCurrentChat(data.chat);
       console.log("data.chat", data.chat);
+      setIsLoaded(true);
     }
   };
 
+  const getAdvertisment = async () => {
+    const { data } = await axios.get(
+      `${getAdvertisementRoute}/${currentChat.advertisement_id}`
+    );
+    setCurrentAdv(data.data);
+  };
+
+  useEffect(() => {
+    if (currentChat !== undefined) {
+      getAdvertisment();
+    }
+  }, [currentChat]);
+
   useEffect(() => {
     getChat();
-    setIsLoaded(true);
   }, [currentUser]);
 
   return (
     <>
       <Container>
         <div className="container">
-          {isLoaded && (
+          {isLoaded && currentAdv && (
             <ChatContainer
               currentChat={currentChat}
               currentUser={currentUser}
               socket={socket}
+              advertisement={currentAdv}
             />
           )}
         </div>
@@ -92,13 +110,15 @@ const Container = styled.div`
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background-color: #f3f3f3;
   .container {
     height: 85vh;
-    width: 85vw;
-    background-color: #00000076;
+    width: 75vw;
+    border-radius: 15px;
+    border: 2px solid #898989;
+    background-color: #fff;
     display: grid;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: 100% 0%;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
       grid-template-columns: 35% 65%;
     }

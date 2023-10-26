@@ -65,7 +65,8 @@ exports.getAllMessages = catchAsync(async (req, res, next) => {
     "users.sender": from,
     "users.author": to,
   });
-  const allMessages = await MessageModel.find({ chat_id: chat._id });
-  console.log("Messages", allMessages);
+  const allMessages = await MessageModel.find({ chat_id: chat[0]._id })
+    .sort({ updatedAt: 1 })
+    .select("message sender");
   res.json({ status: "success", messages: allMessages });
 });

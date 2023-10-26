@@ -5,8 +5,9 @@ import ChatInput from "./ChatInput";
 import axios from "axios";
 import { getAllMessagesRoute, sendMessageRoute } from "../../utils/APIRoutes";
 import { v4 as uuidv4 } from "uuid";
+import { FaHryvnia } from "react-icons/fa";
 
-function ChatContainer({ currentChat, currentUser, socket }) {
+function ChatContainer({ currentChat, currentUser, socket, advertisement }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
@@ -17,14 +18,16 @@ function ChatContainer({ currentChat, currentUser, socket }) {
       from: currentChat.users.sender._id,
       to: currentChat.users.author._id,
     });
+    console.log(response.data.messages);
     setMessages(response.data.messages);
   };
 
   useEffect(() => {
-    console.log("currentChat", currentChat);
-
-    if (currentChat) getMessages();
-    setIsLoaded(true);
+    console.log("current chat: ", currentChat);
+    if (currentChat) {
+      getMessages();
+      setIsLoaded(true);
+    }
   }, [currentChat]);
 
   const handleSendMsg = async (message) => {
@@ -72,35 +75,39 @@ function ChatContainer({ currentChat, currentUser, socket }) {
               <div className="avatar">
                 <img
                   src={
-                    require(`../../../../backend/images/users/${currentChat.users.author.photo}`) ||
+                    require(`../../../../backend/images/products/${advertisement.images[0]}`) ||
                     require("../../images/user.png")
                   }
                   alt="User's image"
                 />
               </div>
               <div className="username">
-                {/* <h3>{currentChat.author.username}</h3> */}
+                <h3>{advertisement.name}</h3>
+              </div>
+              <div className="price">
+                <FaHryvnia size={20} />
+                <h3>{advertisement.price}</h3>
               </div>
             </div>
             {/* <Logout /> */}
           </div>
 
           {/* <Messages /> */}
-          {/* <div className="chat-messages">
+          <div className="chat-messages">
             {messages.map((msg) => {
               return (
                 <div key={uuidv4()} ref={scrollRef}>
                   <div
                     className={`message ${
-                      msg.fromSelf ? "sended" : "recieved"
+                      msg.sender === currentUser._id ? "sended" : "recieved"
                     }`}
                   >
-                    <p className="content">{msg.message}</p>
+                    <p className="content">{msg.message.text}</p>
                   </div>
                 </div>
               );
             })}
-          </div> */}
+          </div>
         </>
       )}
       <ChatInput className="chat-input" handleSendMsg={handleSendMsg} />
@@ -110,30 +117,44 @@ function ChatContainer({ currentChat, currentUser, socket }) {
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 10% 80% 10%;
-  gap: 0.1rem;
+  grid-template-rows: 12% 76% 12%;
+  //   gap: 0.1rem;
   overflow: hidden;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
   .chat-header {
     display: flex;
+    background-color: #acacac;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
     .user-details {
-      display: flex;
+      display: grid;
+      width: 95%;
+      grid-template-columns: 10% 80% 10%;
       align-items: center;
       gap: 1rem;
       .avatar {
         img {
-          height: 3rem;
+          height: 4.2rem;
+          //   width: 4.2rem;
+          object-fit: cover;
         }
       }
       .username {
         h3 {
           color: white;
         }
+      }
+      .price {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+        // justify-self: right;
       }
     }
   }
@@ -170,13 +191,15 @@ const Container = styled.div`
     .sended {
       justify-content: flex-end;
       .content {
-        background-color: #4f04ff21;
+        color: #fff;
+        background-color: #373737;
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #9900ff20;
+        color: #fff;
+        background-color: #7b7b7b;
       }
     }
   }
