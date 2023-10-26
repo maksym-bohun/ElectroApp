@@ -62,7 +62,7 @@ const router = createBrowserRouter([
   { path: "/registration", element: <Registration /> },
   { path: "/signin", element: <SignIn /> },
   { path: "/users/:id", element: <UsersAdverts /> },
-  { path: "/chat/:id", element: <Chat /> },
+  { path: "/chat/:advertisementId", element: <Chat /> },
 ]);
 
 function App() {

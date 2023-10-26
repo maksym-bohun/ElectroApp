@@ -107,6 +107,7 @@ const AdvertismentPage = () => {
               </div>
               <AdvertismentPageSellersInfo
                 seller={seller || currentProduct.author}
+                advertisementId={params.advertismentId}
               />
             </div>
           </div>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import { host } from "../../utils/APIRoutes";
+import { getAndPostChat, host } from "../../utils/APIRoutes";
 import { useSelector } from "react-redux";
 import Contacts from "./Contacts";
 import Welcome from "./Welcome";
@@ -18,6 +18,7 @@ export default function Chat() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [contacts, setContacts] = useState([]);
   const navigate = useNavigate();
+  const params = useParams();
 
   const currentUser = useSelector((state) => state.currentUserReducer.user);
 
@@ -50,29 +51,33 @@ export default function Chat() {
   //   }
   // }, [currentUser]);
 
-  const handleChatChange = (chat) => {
-    setCurrentChat(chat);
+  const getChat = async () => {
+    if (currentUser) {
+      const { data } = await axios.post(getAndPostChat, {
+        sender: currentUser,
+        advertisement_id: params.advertisementId,
+      });
+      setCurrentChat(data.chat);
+      console.log("data.chat", data.chat);
+    }
   };
+
+  useEffect(() => {
+    getChat();
+    setIsLoaded(true);
+  }, [currentUser]);
 
   return (
     <>
       <Container>
         <div className="container">
-          <Contacts
-            contacts={contacts}
-            currentUser={currentUser}
-            changeChat={handleChatChange}
-          />
-          {isLoaded &&
-            (currentChat === undefined ? (
-              <Welcome user={currentUser} />
-            ) : (
-              <ChatContainer
-                currentChat={currentChat}
-                currentUser={currentUser}
-                socket={socket}
-              />
-            ))}
+          {isLoaded && (
+            <ChatContainer
+              currentChat={currentChat}
+              currentUser={currentUser}
+              socket={socket}
+            />
+          )}
         </div>
       </Container>
     </>

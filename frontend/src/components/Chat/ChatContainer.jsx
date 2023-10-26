@@ -7,32 +7,36 @@ import { getAllMessagesRoute, sendMessageRoute } from "../../utils/APIRoutes";
 import { v4 as uuidv4 } from "uuid";
 
 function ChatContainer({ currentChat, currentUser, socket }) {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
 
   const getMessages = async () => {
     const response = await axios.post(getAllMessagesRoute, {
-      from: currentUser._id,
-      to: currentChat._id,
+      from: currentChat.users.sender._id,
+      to: currentChat.users.author._id,
     });
-    setMessages(response.data.projectMessages);
+    setMessages(response.data.messages);
   };
 
   useEffect(() => {
+    console.log("currentChat", currentChat);
+
     if (currentChat) getMessages();
+    setIsLoaded(true);
   }, [currentChat]);
 
   const handleSendMsg = async (message) => {
     await axios.post(sendMessageRoute, {
-      from: currentUser._id,
-      to: currentChat._id,
+      from: currentChat.users.sender._id,
+      to: currentChat.users.author._id,
       message,
     });
 
     socket.current.emit("send-message", {
-      from: currentUser._id,
-      to: currentChat._id,
+      from: currentChat.users.sender._id,
+      to: currentChat.users.author._id,
       msg: message,
     });
 
@@ -61,36 +65,45 @@ function ChatContainer({ currentChat, currentUser, socket }) {
 
   return (
     <Container>
-      <div className="chat-header">
-        <div className="user-details">
-          <div className="avatar">
-            <img
-              src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
-              alt="User's image"
-            />
-          </div>
-          <div className="username">
-            <h3>{currentChat.username}</h3>
-          </div>
-        </div>
-        {/* <Logout /> */}
-      </div>
-
-      {/* <Messages /> */}
-      <div className="chat-messages">
-        {messages.map((msg) => {
-          return (
-            <div key={uuidv4()} ref={scrollRef}>
-              <div
-                className={`message ${msg.fromSelf ? "sended" : "recieved"}`}
-              >
-                <p className="content">{msg.message}</p>
+      {isLoaded && (
+        <>
+          <div className="chat-header">
+            <div className="user-details">
+              <div className="avatar">
+                <img
+                  src={
+                    require(`../../../../backend/images/users/${currentChat.users.author.photo}`) ||
+                    require("../../images/user.png")
+                  }
+                  alt="User's image"
+                />
+              </div>
+              <div className="username">
+                {/* <h3>{currentChat.author.username}</h3> */}
               </div>
             </div>
-          );
-        })}
-      </div>
-      <ChatInput handleSendMsg={handleSendMsg} />
+            {/* <Logout /> */}
+          </div>
+
+          {/* <Messages /> */}
+          {/* <div className="chat-messages">
+            {messages.map((msg) => {
+              return (
+                <div key={uuidv4()} ref={scrollRef}>
+                  <div
+                    className={`message ${
+                      msg.fromSelf ? "sended" : "recieved"
+                    }`}
+                  >
+                    <p className="content">{msg.message}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div> */}
+        </>
+      )}
+      <ChatInput className="chat-input" handleSendMsg={handleSendMsg} />
     </Container>
   );
 }

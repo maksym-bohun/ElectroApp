@@ -58,3 +58,14 @@ exports.deleteMessage = async (req, res) => {
     res.status(500).json({ error: "Failed to delete message" });
   }
 };
+
+exports.getAllMessages = catchAsync(async (req, res, next) => {
+  const { from, to } = req.body;
+  const chat = await ChatModel.find({
+    "users.sender": from,
+    "users.author": to,
+  });
+  const allMessages = await MessageModel.find({ chat_id: chat._id });
+  console.log("Messages", allMessages);
+  res.json({ status: "success", messages: allMessages });
+});

@@ -1,11 +1,21 @@
 const ChatModel = require("../models/chatModel");
+const ProductModel = require("../models/productModel");
+const catchAsync = require("../utils/catchAsync");
 
 exports.createChat = async (req, res) => {
   console.log(req.body);
+  console.log("Creating chat 🫡🫡🫡🫡🫡🫡🫡");
   try {
-    const chat = await ChatModel.create(req.body);
-    const savedChat = await chat.save();
-    console.log("CHAT CREATED🫡🫡🫡🫡🫡🫡");
+    const advertisment = req.body.advertisement_id;
+    const prod = await ProductModel.findById(advertisment)
+      .select("author")
+      .populate("author", "name email phoneNumber");
+    const author = prod.author;
+    const newChat = await ChatModel.create({
+      users: { sender: req.body.sender, author },
+      advertisement_id: advertisment,
+      created_at: Date.now(),
+    });
     res.status(201).json({ status: "success", chat: savedChat });
   } catch (error) {
     res.status(500).json({ status: "failed", error: error.message });
@@ -16,32 +26,27 @@ exports.getChat = async (req, res) => {
   try {
     const chatId = req.params.chatId;
     const chat = await ChatModel.findById(chatId);
-    if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
-    }
-    res.json(chat);
+    // if (!chat) {
+    //   return res.status(404).json({ error: "Chat not found" });
+    // }
+    // res.json(chat);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch chat" });
   }
 };
 
-exports.getChatByUsers = async (req, res, next) => {
+exports.getChatByUsers = catchAsync(async (req, res, next) => {
   console.log("GETTING CHAT");
-  console.log(req.body);
+  const advertisment = req.body.advertisement_id;
   try {
-    const currentUser = req.body.users.filter(
-      (user) => user.role === "user"
-    )[0];
+    const sender = req.body.sender;
     const advertisment = req.body.advertisement_id;
 
     const chat = await ChatModel.find({
       advertisement_id: advertisment,
-      users: {
-        $elemMatch: {
-          user_id: currentUser.user_id,
-        },
-      },
-    });
+      "users.sender": sender._id,
+    }).populate("users.sender users.author", "name photo");
+    console.log("CHAT", chat);
     if (!chat) {
       res.status(500).json({ status: "fail" });
     }
@@ -54,7 +59,7 @@ exports.getChatByUsers = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch chat" });
   }
-};
+});
 
 exports.updateChat = async (req, res) => {
   try {

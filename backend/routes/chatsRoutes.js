@@ -5,9 +5,10 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
-// router
-//   .route("/")
-//   .post(chatsController.getChatByUsers, chatsController.createChat);
+router
+  .route("/")
+  .post(chatsController.getChatByUsers, chatsController.createChat)
+  .get(chatsController.getChat);
 // router
 //   .route("/:chatId")
 //   .post(authController.protect, chatsController.getChat)
@@ -15,6 +16,7 @@ const router = express.Router();
 //   .delete(authController.protect, chatsController.deleteChat);
 
 router.route("/addMessage").post(messagesController.addMessage);
+router.route("/getAllMessages").post(messagesController.getAllMessages);
 // router.route("/message/:messageId").delete(messagesController.sendMessage);
 // router
 //   .route("/message/chat/:chatId")
