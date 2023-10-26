@@ -4,3 +4,4 @@ export const getAllMessagesRoute = `${host}/chats/getAllMessages`;
 export const getAndPostChat = `${host}/chats`;
 export const getAdvertisementRoute = `${host}/products`;
 export const getMeRoute = `${host}/users/me`;
+export const getAllChatsRoute = `${host}/chats/getAllChats`;

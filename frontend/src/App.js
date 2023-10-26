@@ -22,6 +22,7 @@ import { setCategories } from "./store/СategoriesReducer";
 import { setUsers } from "./store/UsersReducer";
 import WalletPageEdit from "./components/walletPage/WalletPageEdit";
 import Chat from "./components/Chat/Chat";
+import AllChats from "./components/allChats/AllChats";
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },
@@ -63,6 +64,7 @@ const router = createBrowserRouter([
   { path: "/signin", element: <SignIn /> },
   { path: "/users/:id", element: <UsersAdverts /> },
   { path: "/chat/:advertisementId", element: <Chat /> },
+  { path: "/chats", element: <AllChats /> },
 ]);
 
 function App() {

@@ -9,6 +9,10 @@ router
   .route("/")
   .post(chatsController.getChatByUsers, chatsController.createChat)
   .get(chatsController.getChat);
+
+router
+  .route("/getAllChats")
+  .get(authController.protect, chatsController.getAllUsersChats);
 // router
 //   .route("/:chatId")
 //   .post(authController.protect, chatsController.getChat)

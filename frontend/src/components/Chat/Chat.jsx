@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import Contacts from "./Contacts";
 import Welcome from "./Welcome";
 import ChatContainer from "./ChatContainer";
+import Navigation from "../navigation/Navigation";
 // allUsersRoute,
 // import ChatContainer from "../components/ChatContainer";
 // import Contacts from "../components/Contacts";
@@ -124,6 +125,7 @@ export default function Chat() {
 
   return (
     <>
+      <Navigation />
       <Container>
         {!isLoaded && <Spinner />}
         {isLoaded && currentAdv && (

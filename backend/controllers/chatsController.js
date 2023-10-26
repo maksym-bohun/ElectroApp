@@ -60,6 +60,12 @@ exports.getChatByUsers = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.getAllUsersChats = catchAsync(async (req, res, next) => {
+  const sell = await ChatModel.find({ "users.author": req.user._id });
+  const buy = await ChatModel.find({ "users.sender": req.user._id });
+  res.json({ status: "success", chats: { sell, buy } });
+});
+
 exports.updateChat = async (req, res) => {
   try {
     const chatId = req.params.chatId;
