@@ -4,7 +4,6 @@ const catchAsync = require("../utils/catchAsync");
 const fs = require("fs");
 
 exports.getMe = (req, res, next) => {
-  // console.log(req.user);
   req.params.id = req.user.id;
   next();
 };
@@ -17,9 +16,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: "success",
-    data: {
-      user,
-    },
+    data: user,
   });
 });
 
@@ -33,10 +30,8 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.changeUsersData = async (req, res, next) => {
   const user = req.user;
-  console.log(req.body);
 
   const currentUser = await User.findById(user.id);
-  // console.log("☘️", currentUser);
   if (req.file) {
     fs.unlink(`${__dirname}/../images/users/${user.photo}`, (err) => {
       if (err) {

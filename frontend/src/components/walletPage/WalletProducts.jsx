@@ -18,8 +18,6 @@ const WalletProducts = ({ usersAdverts, user, likedProducts }) => {
   const [likedAdverts, setLikedAdverts] = useState([]);
 
   useEffect(() => {
-    console.log(likedProducts);
-    console.log("START");
     likedProducts.map((prodId) => {
       fetch(`http://127.0.0.1:8000/api/v1/products/${prodId}`)
         .then((res) => res.json())
@@ -27,7 +25,6 @@ const WalletProducts = ({ usersAdverts, user, likedProducts }) => {
           if (data.status === "success") {
             setLikedAdverts((prevAdverts) => [...prevAdverts, data.data]);
           }
-          console.log("FINISH ONE");
         });
     });
   }, []);
@@ -55,7 +52,7 @@ const WalletProducts = ({ usersAdverts, user, likedProducts }) => {
             <AccordionIcon fontSize={20} />
           </AccordionButton>
         </h2>
-        <AccordionPanel pb={4}>
+        <AccordionPanel pb={4} display="flex" flexDir="column" gap="10px">
           {usersAdverts && usersAdverts.length === 0 ? (
             <div className={classes["emptyAds"]}>
               <p>У вас ще немає оголошень</p>
@@ -104,7 +101,7 @@ const WalletProducts = ({ usersAdverts, user, likedProducts }) => {
             <AccordionIcon fontSize={20} />
           </AccordionButton>
         </h2>
-        <AccordionPanel pb={4}>
+        <AccordionPanel pb={4} display="flex" flexDir="column" gap="10px">
           {likedAdverts && likedAdverts.length === 0 ? (
             <div className={classes["emptyAds"]}>
               <p>У вас ще немає оголошень</p>
@@ -128,12 +125,6 @@ const WalletProducts = ({ usersAdverts, user, likedProducts }) => {
                     adress={product.location.description}
                     phoneNumber={user.phoneNumber}
                     id={product.id}
-                    type="wallet"
-                    stats={{
-                      views: product.views,
-                      phoneNumberViews: product.phoneNumberViews,
-                      likes: product.likes,
-                    }}
                   />
                 </Link>
               );

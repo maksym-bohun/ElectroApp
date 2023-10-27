@@ -16,8 +16,9 @@ section > div {
   font-size: 2rem;
   color: #858484;
   /* align-self: center; */
-  justify-self: center;
+  /* justify-self: center; */
   margin-top: 7rem;
+  margin: 5rem auto;
 }
 
 .categories-container {
@@ -44,4 +45,8 @@ section > div {
 .categories-container input {
   height: 1rem;
   width: 1rem;
+}
+
+.spinner {
+  left: 60%;
 }

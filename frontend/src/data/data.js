@@ -362,7 +362,7 @@ export const DUMMY_CATEGORIES = [
         style={{ height: 50, width: 50 }}
       />
     ),
-    echnicalInfo: [
+    technicalInfo: [
       {
         title: "Бренд",
         array: [

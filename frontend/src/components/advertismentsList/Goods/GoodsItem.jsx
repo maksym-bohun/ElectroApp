@@ -1,5 +1,5 @@
 import classes from "./GoodsItem.module.css";
-import { FaHryvnia, FaEye } from "react-icons/fa";
+import { FaHryvnia } from "react-icons/fa";
 import { AiOutlineHeart, AiOutlinePhone, AiOutlineEye } from "react-icons/ai";
 
 const GoodsItem = ({
