@@ -7,18 +7,36 @@ import { getAllMessagesRoute, sendMessageRoute } from "../../utils/APIRoutes";
 import { v4 as uuidv4 } from "uuid";
 import { FaHryvnia } from "react-icons/fa";
 
-function ChatContainer({ currentChat, currentUser, socket, advertisement }) {
+function ChatContainer({
+  currentChat,
+  currentUser,
+  socket,
+  advertisement,
+  chat,
+  user,
+}) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
 
+  console.log("socket", socket);
+
+  if (chat) {
+    currentChat = chat;
+    currentUser = user;
+  }
+  const otherUser =
+    currentChat.users.sender._id !== currentUser._id
+      ? currentChat.users.sender
+      : currentChat.users.author;
+
   const getMessages = async () => {
     const response = await axios.post(getAllMessagesRoute, {
-      from: currentChat.users.sender._id,
-      to: currentChat.users.author._id,
+      from: currentUser._id,
+      to: otherUser._id,
+      advertisement_id: advertisement._id,
     });
-    console.log(response.data);
     setMessages(response.data.messages);
   };
 
@@ -31,29 +49,30 @@ function ChatContainer({ currentChat, currentUser, socket, advertisement }) {
 
   const handleSendMsg = async (message) => {
     await axios.post(sendMessageRoute, {
-      from: currentChat.users.sender._id,
-      to: currentChat.users.author._id,
+      from: currentUser._id,
+      to: otherUser._id,
       message,
+      advertisement_id: advertisement._id,
     });
 
     socket.current.emit("send-message", {
-      from: currentChat.users.sender._id,
-      to: currentChat.users.author._id,
+      from: currentUser._id,
+      to: otherUser._id,
       msg: message,
     });
 
     const msgs = [...messages];
     msgs.push({
-      sender: currentChat.users.sender._id,
+      sender: currentUser._id,
       message: { text: message },
     });
-    console.log("msgs", msgs);
     setMessages(msgs);
   };
 
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-recieve", (msg) => {
+        console.log("msg-recieve");
         setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
@@ -62,7 +81,6 @@ function ChatContainer({ currentChat, currentUser, socket, advertisement }) {
   useEffect(() => {
     if (arrivalMessage)
       setMessages((prevMessages) => [...prevMessages, arrivalMessage]);
-    console.log("RECIEVE MSG", arrivalMessage);
   }, [arrivalMessage]);
 
   useEffect(() => {

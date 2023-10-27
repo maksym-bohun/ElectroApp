@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const app = require("./app");
-const { Server } = require("socket.io");
+const socket = require("socket.io");
 const messagesController = require("./controllers/messagesController");
 
 process.on("uncaughtException", (err) => {
@@ -31,16 +31,26 @@ const server = app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
 
-const io = new Server(server, {
+process.on("unhandledRejection", (err) => {
+  console.log("Unhandled rejection! 💥 Shutting down...");
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
+const io = socket(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: "http://127.0.0.1:5173",
+    credentials: true,
   },
 });
 
+global.onlineUsers = new Map();
 io.on("connection", (socket) => {
   global.chatSocket = socket;
   socket.on("add-user", (userId) => {
+    console.log("add-user");
     onlineUsers.set(userId, socket.id);
   });
 
@@ -51,13 +61,5 @@ io.on("connection", (socket) => {
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit("msg-recieve", data.msg);
     }
-  });
-});
-
-process.on("unhandledRejection", (err) => {
-  console.log("Unhandled rejection! 💥 Shutting down...");
-  console.log(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
   });
 });

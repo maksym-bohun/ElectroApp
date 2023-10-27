@@ -7,7 +7,11 @@ const ChatSchema = new mongoose.Schema(
       author: { type: mongoose.Schema.ObjectId, ref: "User" },
     },
 
-    advertisement_id: mongoose.Schema.ObjectId,
+    advertisement_id: { type: mongoose.Schema.ObjectId, ref: "Product" },
+    last_message: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

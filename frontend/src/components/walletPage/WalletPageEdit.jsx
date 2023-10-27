@@ -21,10 +21,7 @@ const WalletPageEdit = () => {
   const imageRef = useRef();
   const dispatch = useDispatch();
 
-  console.log("Current USer", currentUser);
-
   useEffect(() => {
-    console.log("START UPDATING USER");
     updateUser();
   }, []);
 
@@ -41,7 +38,6 @@ const WalletPageEdit = () => {
       if ((phoneNumber + "").length === 9) return true;
       else {
         setPhoneNumberInvalid(true);
-        console.log("PHONE NUMBER INCORRECT", phoneNumber);
         return false;
       }
     }
@@ -68,7 +64,6 @@ const WalletPageEdit = () => {
             );
           setPhoneNumber(data.data.phoneNumber);
           dispatch(setUser(data.data));
-          console.log("✅✅✅✅✅✅✅✅✅✅✅");
           setCurrentUser(data.data);
           if (exit)
             setTimeout(() => {
@@ -77,7 +72,6 @@ const WalletPageEdit = () => {
             }, 1000);
           else setIsLoading(false);
         } else {
-          console.log("❗️❗️❗️❗️❗️❗️❗️❗️❗️❗️❗️");
           setIsLoading(false);
           navigate("/signin");
         }
@@ -97,7 +91,6 @@ const WalletPageEdit = () => {
     const token = localStorage.getItem("token");
     if (checkInputs("phoneNumber") && checkInputs("name")) {
       try {
-        console.log("Start");
         const response = await fetch("http://127.0.0.1:8000/api/v1/users/me", {
           method: "PATCH",
           body: formData,
@@ -107,7 +100,6 @@ const WalletPageEdit = () => {
         });
 
         if (response.ok) {
-          console.log("Data loaded successful");
           setIsLoading(true);
           updateUser(true);
         } else {

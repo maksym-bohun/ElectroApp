@@ -21,13 +21,11 @@ const AllAdvertismentsPage = () => {
   const inputValue = location.state.inputValue.toLowerCase();
 
   const setFiltersLoadedHandler = (res) => {
-    console.log(res);
     setFiltersLoaded(res);
   };
 
   useEffect(() => {
     // setProducts(productsState);
-    console.log(allProducts);
     setDefaultProducts(
       allProducts.filter(
         (prod) =>
@@ -66,7 +64,6 @@ const AllAdvertismentsPage = () => {
           {!listIsEmpty && (
             <div className={classes.list}>
               {products.map((item) => {
-                console.log("item", item);
                 return (
                   <NavLink
                     to={`/allAdvertisments/${item.id}`}
@@ -110,6 +107,5 @@ export const AllAdvertismentsLoader = async () => {
   const res = await fetch("http://127.0.0.1:8000/api/v1/products");
   const data = await res.json();
 
-  console.log("PRODS ", data.data);
   return data.data;
 };

@@ -3,22 +3,27 @@ const ChatModel = require("../models/chatModel");
 const catchAsync = require("../utils/catchAsync");
 
 exports.addMessage = catchAsync(async (req, res, next) => {
-  const { from, to, message, advertismentId } = req.body;
+  const { from, to, message, advertisement_id } = req.body;
   let chat_id;
-  const chatExists = await ChatModel.find({
-    "users.sender": from,
-    "users.author": to,
+  const chatExists = await ChatModel.findOne({
+    $or: [
+      { "users.sender": from, "users.author": to },
+      { "users.sender": to, "users.author": from },
+    ],
+    advertisement_id,
   });
 
   if (chatExists && chatExists.length === 0) {
     const newChat = await ChatModel.create({
       users: { sender: from, author: to },
-      advertisement_id: advertismentId,
-      created_at: Date.now(),
+      advertisement_id,
+      last_message: message,
     });
     chat_id = newChat._id;
   } else {
-    chat_id = chatExists[0]._id;
+    chat_id = chatExists._id;
+    chatExists.last_message = message;
+    await chatExists.save();
   }
 
   const data = await MessageModel.create({
@@ -60,13 +65,16 @@ exports.deleteMessage = async (req, res) => {
 };
 
 exports.getAllMessages = catchAsync(async (req, res, next) => {
-  console.log(req.body, "\n\n\n\n");
-  const { from, to } = req.body;
-  const chat = await ChatModel.find({
-    "users.sender": from,
-    "users.author": to,
+  const { from, to, advertisement_id } = req.body;
+  const chat = await ChatModel.findOne({
+    $or: [
+      { "users.sender": from, "users.author": to },
+      { "users.sender": to, "users.author": from },
+    ],
+    advertisement_id,
   });
-  const allMessages = await MessageModel.find({ chat_id: chat[0]._id })
+
+  const allMessages = await MessageModel.find({ chat_id: chat._id })
     .sort({ updatedAt: 1 })
     .select("message sender");
   res.json({ status: "success", messages: allMessages });

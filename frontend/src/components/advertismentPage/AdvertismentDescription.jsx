@@ -66,7 +66,6 @@ const AdvertismentDescription = ({
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }).then((res) => res.json());
-          // .then((data) => console.log(data));
         } else {
           setPostIsLiked(true);
           dispatch(likeProduct(id));
@@ -76,7 +75,6 @@ const AdvertismentDescription = ({
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }).then((res) => res.json());
-          // .then((data) => console.log(data));
         }
       } else {
         console.log("Подождите 5 секунд перед следующим кликом.");

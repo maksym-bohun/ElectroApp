@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
 import Spinner from "../UI/Spinner";
@@ -11,14 +11,8 @@ import {
   host,
 } from "../../utils/APIRoutes";
 import { useSelector } from "react-redux";
-import Contacts from "./Contacts";
-import Welcome from "./Welcome";
 import ChatContainer from "./ChatContainer";
 import Navigation from "../navigation/Navigation";
-// allUsersRoute,
-// import ChatContainer from "../components/ChatContainer";
-// import Contacts from "../components/Contacts";
-// import Welcome from "../components/Welcome";
 
 export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
@@ -26,6 +20,13 @@ export default function Chat() {
   const [currentAdv, setCurrentAdv] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  let chat = null,
+    user = null;
+  if (location.state?.chat) {
+    chat = location.state.chat;
+    user = location.state.user;
+  }
   const params = useParams();
   const currentUserFromState = useSelector(
     (state) => state.currentUserReducer.user
@@ -33,55 +34,34 @@ export default function Chat() {
 
   const socket = useRef();
 
-  // useEffect(async () => {
-  //   if (!localStorage.getItem("chat-app-user")) {
-  //     navigate("/login");
-  //   } else {
-  //     setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
-  //     setIsLoaded(true);
-  //   }
-  // }, []);
-
-  // useEffect(async () => {
-  //   if (currentUser) {
-  //     if (currentUser.isAvatarImageSet) {
-  //       const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-  //       setContacts(data.data.users);
-  //     } else {
-  //       navigate("/setAvatar");
-  //     }
-  //   }
-  // }, [currentUser]);
-
   const getChat = async () => {
     if (
       currentUserFromState &&
       Object.values(currentUserFromState).length !== 0
     ) {
       setCurrentUser(currentUserFromState);
-      console.log("get and post chat");
-      console.log(currentUser, params.advertisementId);
       const { data } = await axios.post(getAndPostChat, {
         sender: currentUserFromState,
         advertisement_id: params.advertisementId,
       });
       setCurrentChat(data.chat);
-      console.log("data.chat", data.chat);
       setIsLoaded(true);
     } else {
+      console.log("ELSE");
       fetch(getMeRoute, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
         .then((res) => res.json())
         .then((userData) => {
+          console.log("Got me", userData.data);
           setCurrentUser(userData.data);
           axios
             .post(getAndPostChat, {
-              sender: userData.data,
+              sender: userData.data._id,
               advertisement_id: params.advertisementId,
             })
             .then((chatData) => {
-              console.log(chatData.data.chat);
+              console.log("ELSE", chatData);
               setCurrentChat(chatData.data.chat);
               setIsLoaded(true);
             });
@@ -90,35 +70,41 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    if (
-      !localStorage.getItem("token") ||
-      localStorage.getItem("token") === ""
-    ) {
-      navigate("/signin");
+    if (!chat) {
+      if (
+        !localStorage.getItem("token") ||
+        localStorage.getItem("token") === ""
+      ) {
+        navigate("/signin");
+      } else {
+        getChat();
+      }
     } else {
-      getChat();
+      setCurrentChat(chat);
+      setIsLoaded(true);
+      setCurrentUser(user);
     }
   }, []);
 
   useEffect(() => {
     if (currentUser) {
       socket.current = io(host);
+      console.log(currentUser._id);
       socket.current.emit("add-user", currentUser._id);
     }
   }, [currentUser]);
 
   const getAdvertisment = async () => {
-    console.log("currenct chat in getAdv", currentChat);
     const { data } = await axios.get(
-      `${getAdvertisementRoute}/${currentChat.advertisement_id}`
+      `${getAdvertisementRoute}/${
+        chat ? currentChat.advertisement_id._id : currentChat.advertisement_id
+      }`
     );
-    console.log(data.data);
     setCurrentAdv(data.data);
   };
 
   useEffect(() => {
     if (currentChat !== undefined) {
-      console.log("CURRENT CHAT EXISTS", currentChat);
       getAdvertisment();
     }
   }, [currentChat]);
@@ -131,6 +117,8 @@ export default function Chat() {
         {isLoaded && currentAdv && (
           <div className="container">
             <ChatContainer
+              chat={chat}
+              user={user}
               currentChat={currentChat}
               currentUser={currentUser}
               socket={socket}
@@ -160,8 +148,8 @@ const Container = styled.div`
     background-color: #fff;
     display: grid;
     grid-template-columns: 100% 0%;
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%;
-    }
+    // @media screen and (min-width: 720px) and (max-width: 1080px) {
+    //   grid-template-columns: 35% 65%;
+    // }
   }
 `;

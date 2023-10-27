@@ -39,7 +39,6 @@ const router = createBrowserRouter([
           },
         });
         const data = await res.json();
-        console.log("wallet loader", data.data);
         return data.data || null;
       }
     },
@@ -96,7 +95,6 @@ function App() {
       });
       const me = await meRes.json();
       await dispatch(setUser(me.data.user));
-      console.log("USER LOADED");
     }
   };
 

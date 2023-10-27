@@ -18,12 +18,9 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-  console.log(req.body);
-
   try {
     const images = req.files.map((file) => file.filename);
     const { technicalInfo } = req.body;
-    // console.log(req.body.city);
 
     const techInfo = JSON.parse(technicalInfo);
 
@@ -37,8 +34,6 @@ exports.createProduct = async (req, res) => {
     newProduct.author = req.user._id;
     newProduct.save();
 
-    console.log(newProduct);
-    console.log(req.user._id);
     await User.findByIdAndUpdate(req.user.id, {
       $push: { products: newProduct._id },
     });

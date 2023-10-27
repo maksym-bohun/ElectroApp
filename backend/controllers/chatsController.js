@@ -5,18 +5,17 @@ const catchAsync = require("../utils/catchAsync");
 
 exports.createChat = async (req, res) => {
   try {
-    const advertisment = req.body.advertisement_id;
+    const advertisement = req.body.advertisement_id;
     const sender = await UserModel.findById(req.body.sender).select(
       "name email phoneNumber"
     );
-    const prod = await ProductModel.findById(advertisment)
+    const prod = await ProductModel.findById(advertisement)
       .select("author")
       .populate("author", "name email phoneNumber");
-    console.log("\nPROD\n", prod);
     const author = prod.author;
     const newChat = await ChatModel.create({
       users: { sender, author },
-      advertisement_id: advertisment,
+      advertisement_id: advertisement,
     });
     res.status(201).json({ status: "success", chat: newChat });
   } catch (error) {
@@ -38,32 +37,33 @@ exports.getChat = async (req, res) => {
 };
 
 exports.getChatByUsers = catchAsync(async (req, res, next) => {
-  const advertisment = req.body.advertisement_id;
   try {
     const sender = req.body.sender;
-    const advertisment = req.body.advertisement_id;
-    const chat = await ChatModel.find({
-      advertisement_id: advertisment,
-      "users.sender": sender._id,
+    const { advertisement_id } = req.body;
+    const chat = await ChatModel.findOne({
+      $or: [{ "users.sender": sender }, { "users.author": sender }],
+      advertisement_id,
     }).populate("users.sender users.author", "name photo");
-
     if (!chat) {
-      res.status(500).json({ status: "fail" });
-    }
-    if (chat.length === 0) {
-      next();
+      return next();
     } else {
-      res.status(200).json({ status: "success", chat: chat[0] });
+      return res.status(200).json({ status: "success", chat });
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch chat" });
+    return res.status(500).json({ error: "Failed to fetch chat" });
   }
 });
 
 exports.getAllUsersChats = catchAsync(async (req, res, next) => {
-  const sell = await ChatModel.find({ "users.author": req.user._id });
-  const buy = await ChatModel.find({ "users.sender": req.user._id });
-  res.json({ status: "success", chats: { sell, buy } });
+  const sell = await ChatModel.find({ "users.author": req.user._id }).populate(
+    "advertisement_id users.sender users.author"
+  );
+
+  const buy = await ChatModel.find({ "users.sender": req.user._id }).populate(
+    "advertisement_id users.sender users.author"
+  );
+
+  res.json({ status: "success", chats: { buy, sell } });
 });
 
 exports.updateChat = async (req, res) => {

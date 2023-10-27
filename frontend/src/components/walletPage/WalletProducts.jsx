@@ -18,8 +18,6 @@ const WalletProducts = ({ usersAdverts, user, likedProducts }) => {
   const [likedAdverts, setLikedAdverts] = useState([]);
 
   useEffect(() => {
-    console.log(likedProducts);
-    console.log("START");
     likedProducts.map((prodId) => {
       fetch(`http://127.0.0.1:8000/api/v1/products/${prodId}`)
         .then((res) => res.json())
@@ -27,7 +25,6 @@ const WalletProducts = ({ usersAdverts, user, likedProducts }) => {
           if (data.status === "success") {
             setLikedAdverts((prevAdverts) => [...prevAdverts, data.data]);
           }
-          console.log("FINISH ONE");
         });
     });
   }, []);
