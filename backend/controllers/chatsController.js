@@ -55,13 +55,15 @@ exports.getChatByUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllUsersChats = catchAsync(async (req, res, next) => {
-  const sell = await ChatModel.find({ "users.author": req.user._id }).populate(
-    "advertisement_id users.sender users.author"
-  );
+  const sell = await ChatModel.find({
+    "users.author": req.user._id,
+    last_message: { $ne: "" },
+  }).populate("advertisement_id users.sender users.author");
 
-  const buy = await ChatModel.find({ "users.sender": req.user._id }).populate(
-    "advertisement_id users.sender users.author"
-  );
+  const buy = await ChatModel.find({
+    "users.sender": req.user._id,
+    last_message: { $ne: "" },
+  }).populate("advertisement_id users.sender users.author");
 
   res.json({ status: "success", chats: { buy, sell } });
 });

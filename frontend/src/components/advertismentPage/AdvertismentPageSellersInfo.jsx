@@ -56,7 +56,7 @@ const AdvertismentPageSellersInfo = ({ seller, advertisementId }) => {
   }, [showNumber]);
 
   const openChat = async () => {
-    if (currentUser._id !== seller._id) {
+    if (currentUser && currentUser._id !== seller._id) {
       navigate(`/chat/${advertisementId}`);
     } else {
       toast(`Це ваше оголошення!`, {
@@ -64,31 +64,6 @@ const AdvertismentPageSellersInfo = ({ seller, advertisementId }) => {
         type: "warning",
       });
     }
-    //   const res = await fetch("http://127.0.0.1:8000/api/v1/chats", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //     },
-    //     body: JSON.stringify({
-    //       users: [
-    //         { user_id: seller._id, role: "seller" },
-    //         { user_id: currentUser._id, role: "user" },
-    //       ],
-    //       advertisement_id: params.advertismentId,
-    //       created_at: new Date(Date.now()),
-    //     }),
-    //   });
-
-    // const data = await res.json();
-    // console.log("DATA ", data);
-    // if (data.status === "success") {
-    //   setShowChat(true);
-    //   setSocket(
-    //     io.connect(`http://127.0.0.1:8000/api/v1/chats/${data.chat._id}`)
-    //   );
-    //   setRoom(data.chat._id);
-    // }
   };
 
   return (

@@ -98,7 +98,6 @@ export default function Chat() {
   useEffect(() => {
     if (currentUser) {
       socket.current = io(host);
-      console.log(currentUser._id);
       socket.current.emit("add-user", currentUser._id);
     }
   }, [currentUser]);
@@ -109,6 +108,7 @@ export default function Chat() {
         chat ? currentChat.advertisement_id._id : currentChat.advertisement_id
       }`
     );
+    console.log("DATA", data);
     setCurrentAdv(data.data);
   };
 

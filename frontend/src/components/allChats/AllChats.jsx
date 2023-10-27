@@ -67,6 +67,11 @@ const AllChats = () => {
         </div>
         {showPanel1 && (
           <div className="accordion-panel" id="panel1">
+            {buyChats.length === 0 && (
+              <div className="accordion-panel--empty">
+                У вас поки що немає чатів.
+              </div>
+            )}
             {buyChats.map((chat) => (
               <ChatCard chat={chat} panel="buy" key={uuidv4()} />
             ))}
@@ -74,6 +79,11 @@ const AllChats = () => {
         )}
         {showPanel2 && (
           <div className="accordion-panel" id="panel2">
+            {sellChats.length === 0 && (
+              <div className="accordion-panel--empty">
+                У вас поки що немає чатів.
+              </div>
+            )}
             {sellChats.map((chat) => (
               <ChatCard chat={chat} panel="sell" key={uuidv4()} />
             ))}
@@ -112,6 +122,12 @@ const Container = styled.div`
       display: flex;
       flex-direction: column;
       gap: 1rem;
+
+      &--empty {
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
     }
 
     &-active {

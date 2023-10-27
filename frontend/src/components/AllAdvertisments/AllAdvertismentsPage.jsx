@@ -25,7 +25,7 @@ const AllAdvertismentsPage = () => {
   };
 
   useEffect(() => {
-    // setProducts(productsState);
+    setProducts(productsState);
     setDefaultProducts(
       allProducts.filter(
         (prod) =>
@@ -63,6 +63,11 @@ const AllAdvertismentsPage = () => {
           )}
           {!listIsEmpty && (
             <div className={classes.list}>
+              {products.length === 0 && (
+                <div className={classes["empty-list"]}>
+                  Нажаль, таких оголошень немає.
+                </div>
+              )}
               {products.map((item) => {
                 return (
                   <NavLink
@@ -94,7 +99,7 @@ const AllAdvertismentsPage = () => {
             onGetFilters={getFiltersHandler}
             setFiltersLoaded={setFiltersLoaded}
           />
-          <Spinner />
+          <Spinner className={classes.spinner} />
         </>
       )}
     </section>

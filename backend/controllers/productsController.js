@@ -5,7 +5,7 @@ const upload = require("../utils/productsStorage");
 
 exports.getAllProducts = async (req, res) => {
   const products = await Product.find()
-    .populate("category", "name")
+    .populate("category")
     .populate({
       path: "author",
       select: "name phoneNumber email photo products",
@@ -14,6 +14,8 @@ exports.getAllProducts = async (req, res) => {
         select: "images name _id price location technicalInfo description",
       },
     });
+
+  console.log("Products: ", products);
   res.status(200).json({ status: "success", data: products });
 };
 
@@ -45,24 +47,17 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getProduct = async (req, res) => {
-  // try {
-  //   const products = await Product.find({}, "-__v");
-  //   console.log("GET PRODUCT", products);
-  //   res.json(products);
-  // } catch (err) {
-  //   console.error(err);
-  //   res.status(500).json({ error: "Ошибка при получении продуктов" });
-  // }
-
   try {
-    const product = await Product.findById(req.params.id).populate({
-      path: "author",
-      select: "name phoneNumber email photo products",
-      populate: {
-        path: "products",
-        select: "images name _id price location technicalInfo",
-      },
-    });
+    const product = await Product.findById(req.params.id)
+      .populate({
+        path: "author",
+        select: "name phoneNumber email photo products",
+        populate: {
+          path: "products",
+          select: "images name _id price location technicalInfo",
+        },
+      })
+      .populate("category", "name");
 
     product.views += 1;
 

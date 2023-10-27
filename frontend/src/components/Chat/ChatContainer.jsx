@@ -6,6 +6,7 @@ import axios from "axios";
 import { getAllMessagesRoute, sendMessageRoute } from "../../utils/APIRoutes";
 import { v4 as uuidv4 } from "uuid";
 import { FaHryvnia } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function ChatContainer({
   currentChat,
@@ -88,7 +89,10 @@ function ChatContainer({
     <Container>
       {isLoaded && (
         <>
-          <div className="chat-header">
+          <Link
+            className="chat-header"
+            to={`/${advertisement.category.name}/${advertisement._id}`}
+          >
             <div className="user-details">
               <div className="avatar">
                 <img
@@ -99,18 +103,19 @@ function ChatContainer({
                   alt="User's image"
                 />
               </div>
-              <div className="username">
-                <h3>{advertisement.name}</h3>
+              <div className="username-and-title">
+                <div className="username">{advertisement.author.name}</div>
+                <div className="title">
+                  <h3>{advertisement.name}</h3>
+                </div>
               </div>
               <div className="price">
                 <FaHryvnia size={20} />
                 <h3>{advertisement.price}</h3>
               </div>
             </div>
-            {/* <Logout /> */}
-          </div>
+          </Link>
 
-          {/* <Messages /> */}
           <div className="chat-messages">
             {messages.map((msg) => {
               return (
@@ -144,6 +149,8 @@ const Container = styled.div`
   }
   .chat-header {
     display: flex;
+    text-decoration: none;
+    cursor: pointer;
     background-color: #373737;
     border-top-right-radius: 12px;
     border-top-left-radius: 12px;
@@ -163,9 +170,15 @@ const Container = styled.div`
           object-fit: cover;
         }
       }
-      .username {
+      .username-and-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: white;
+        gap: 0.5rem;
         h3 {
-          color: white;
+          margin: 0;
+          margin-bottom: 0.5rem;
         }
       }
       .price {
