@@ -20,8 +20,6 @@ function ChatContainer({
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
 
-  console.log("socket", socket);
-
   if (chat) {
     currentChat = chat;
     currentUser = user;
@@ -71,9 +69,8 @@ function ChatContainer({
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("msg-recieve", (msg) => {
-        console.log("msg-recieve");
-        setArrivalMessage({ fromSelf: false, message: msg });
+      socket.current.on("msg-recieve", (data) => {
+        setArrivalMessage({ message: { text: data.msg }, sender: data.sender });
       });
     }
   }, []);
@@ -123,6 +120,7 @@ function ChatContainer({
                       msg.sender === currentUser._id ? "sended" : "recieved"
                     }`}
                   >
+                    {/* {console.log("msg", msg)} */}
                     <p className="content">{msg.message.text}</p>
                   </div>
                 </div>

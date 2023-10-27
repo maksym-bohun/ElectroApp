@@ -31,7 +31,7 @@ const router = createBrowserRouter([
     element: <WalletPage />,
     loader: async () => {
       const token = localStorage.getItem("token");
-      if (token !== "") {
+      if (token && token !== "") {
         const res = await fetch("http://127.0.0.1:8000/api/v1/users/me", {
           headers: {
             "Content-type": "application/json",
@@ -40,6 +40,8 @@ const router = createBrowserRouter([
         });
         const data = await res.json();
         return data.data || null;
+      } else {
+        return null;
       }
     },
   },

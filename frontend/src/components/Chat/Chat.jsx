@@ -34,6 +34,15 @@ export default function Chat() {
 
   const socket = useRef();
 
+  useEffect(() => {
+    if (
+      !localStorage.getItem("token") ||
+      localStorage.getItem("token") === ""
+    ) {
+      navigate("/signin");
+    }
+  }, []);
+
   const getChat = async () => {
     if (
       currentUserFromState &&

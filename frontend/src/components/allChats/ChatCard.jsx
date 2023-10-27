@@ -18,7 +18,7 @@ const ChatCard = ({ chat, panel }) => {
   useEffect(() => {
     getMe();
   }, []);
-  console.log(chat);
+
   return (
     <Link
       to={`/chat/${chat.advertisement_id._id}`}

@@ -4,6 +4,7 @@ import Navigation from "../navigation/Navigation";
 import styled from "styled-components";
 import ChatCard from "./ChatCard";
 import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 const AllChats = () => {
   const [buyChats, setBuyChats] = useState([]);
@@ -21,6 +22,8 @@ const AllChats = () => {
     console.log(data.chats.buy);
   };
 
+  const navigate = useNavigate();
+
   const togglePanel = (panel) => {
     if (panel == 1) {
       setShowPanel1(true);
@@ -32,7 +35,12 @@ const AllChats = () => {
   };
 
   useEffect(() => {
-    fetchChats();
+    if (
+      !localStorage.getItem("token") ||
+      localStorage.getItem("token") === ""
+    ) {
+      navigate("/signin");
+    } else fetchChats();
   }, []);
 
   return (
